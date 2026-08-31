@@ -57,7 +57,8 @@
         <div class="field"><label for="manualWeek">현재 단계</label><select id="manualWeek"></select></div>
         <button class="btn" id="saveSettings" style="width:100%">설정 저장</button>
       </article>
-      <article class="card"><div class="eyebrow">백업</div><h3>기록 내보내기</h3><p class="detail">기록은 이 아이폰에만 저장됩니다. 앱 데이터 삭제에 대비해 백업 파일을 보관할 수 있습니다.</p><div class="actions"><button class="btn alt" id="exportBtn">백업 파일</button><button class="btn ghost" id="importBtn">백업 불러오기</button></div><input id="importFile" type="file" accept="application/json" hidden></article>
+      <article class="card"><div class="eyebrow">백업</div><h3>기록 지키기</h3><p class="detail">기록은 이 아이폰에만 저장됩니다. 앱 데이터 삭제에 대비해 백업 파일을 보관할 수 있습니다.</p><p class="privacy" id="backupStatus"></p><div class="actions"><button class="btn alt" id="exportBtn">백업 파일</button><button class="btn ghost" id="importBtn">백업 불러오기</button></div><input id="importFile" type="file" accept="application/json" hidden></article>
+      <article class="card"><div class="eyebrow">앱 정보</div><h3>30분 러닝 <span id="appVersion">v1.1.0</span></h3><p class="detail">새 기능이 보이지 않을 때 업데이트를 확인해보세요.</p><button class="btn ghost" id="updateBtn" style="width:100%">업데이트 확인</button></article>
       <article class="card"><div class="eyebrow">데이터 관리</div><p class="privacy">외부 계정, 광고, 분석 도구를 사용하지 않습니다. 모든 운동 기록과 설정은 이 앱의 로컬 저장공간에만 보관됩니다.</p><button class="btn danger" id="clearBtn" style="width:100%;margin-top:10px">모든 기록 삭제</button></article>
     </section>
   </main>
@@ -85,7 +86,7 @@
       {name:'걷기·달리기',type:'러닝',run:true},
       {name:'자유 운동',type:'선택',detail:'몸이 가벼우면 빠른 걷기 30분, 피곤하면 회복 걷기 30분'}
     ];
-    const key='running30-v1';
+    const key='running30-v1',APP_VERSION='1.1.0';
     const iso=d=>{const x=new Date(d);x.setMinutes(x.getMinutes()-x.getTimezoneOffset());return x.toISOString().slice(0,10)};
     const monday=d=>{const x=new Date(d);const n=(x.getDay()+6)%7;x.setDate(x.getDate()-n);x.setHours(0,0,0,0);return x};
     const state=JSON.parse(localStorage.getItem(key)||'null')||{startDate:iso(new Date()),manualWeek:1,records:{}};
@@ -107,6 +108,7 @@
       document.querySelector('#adjustTitle').textContent=missed.length?`${missed.length}일을 놓쳤어요. 괜찮습니다.`:'몰아서 뛰지 마세요';
       document.querySelector('#adjustText').textContent=missed.length?'빠진 운동은 건너뛰고 오늘 계획부터 이어가세요. 오늘도 힘들면 30분 걷기로 바꾸고 다음 러닝 날에 원래 순서로 복귀합니다.':'빠진 운동은 다음 날 두 배로 하지 않습니다. 일정은 그대로 두고 오늘 계획부터 이어갑니다.';
       renderRecords();document.querySelector('#startDate').value=state.startDate;document.querySelector('#manualWeek').value=state.manualWeek;
+      const count=Object.keys(state.records).length,last=state.lastBackupAt?dateLabel(iso(new Date(state.lastBackupAt))):'아직 없음';document.querySelector('#backupStatus').textContent=`저장된 기록 ${count}개 · 마지막 백업 ${last}`;
       const r=state.records[today];document.querySelector('#minutes').value=r?.minutes??30;document.querySelector('#note').value=r?.note??'';effort=r?.effort??3;document.querySelectorAll('#effort button').forEach(b=>b.classList.toggle('on',+b.dataset.v===effort));
     }
     function renderRecords(){const rows=Object.entries(state.records).sort((a,b)=>b[0].localeCompare(a[0]));document.querySelector('#records').innerHTML=rows.length?rows.map(([d,r])=>`<div class="record"><div class="record-top"><strong>${dateLabel(d)}</strong><span class="pill ${r.status==='rest'?'orange':''}">${r.status==='done'?r.minutes+'분 완료':'휴식'}</span></div><div class="detail">${r.status==='done'?'강도 '+r.effort+'/5':''}${r.note?' · '+escapeHtml(r.note):''}</div></div>`).join(''):'<div class="empty">아직 저장된 기록이 없습니다.</div>'}
@@ -121,10 +123,11 @@
     document.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('on',x===b));document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));document.querySelector('#'+b.dataset.view+'View').classList.add('active');window.scrollTo({top:0,behavior:'smooth'})});
     const sel=document.querySelector('#manualWeek');PROGRAM.forEach((p,i)=>sel.insertAdjacentHTML('beforeend',`<option value="${i+1}">${i+1}주차 · ${p.goal}</option>`));
     document.querySelector('#saveSettings').onclick=()=>{state.startDate=document.querySelector('#startDate').value||iso(new Date());state.manualWeek=+sel.value;save();render();toast('설정을 저장했어요')};
-    document.querySelector('#exportBtn').onclick=()=>{const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='30분러닝-백업-'+iso(new Date())+'.json';a.click();URL.revokeObjectURL(a.href)};
-    document.querySelector('#importBtn').onclick=()=>document.querySelector('#importFile').click();document.querySelector('#importFile').onchange=async e=>{try{const d=JSON.parse(await e.target.files[0].text());if(!d.records||!d.startDate)throw 0;Object.assign(state,d);save();render();toast('백업을 불러왔어요')}catch{alert('올바른 백업 파일이 아닙니다.')}};
+    document.querySelector('#exportBtn').onclick=()=>{state.lastBackupAt=new Date().toISOString();save();render();const data={schemaVersion:1,appVersion:APP_VERSION,exportedAt:state.lastBackupAt,...state},blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='30분러닝-백업-'+iso(new Date())+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);toast('백업 파일을 만들었어요')};
+    document.querySelector('#importBtn').onclick=()=>document.querySelector('#importFile').click();document.querySelector('#importFile').onchange=async e=>{try{const file=e.target.files?.[0];if(!file)return;const d=JSON.parse(await file.text()),validRecords=d.records&&typeof d.records==='object'&&!Array.isArray(d.records),validDate=/^\d{4}-\d{2}-\d{2}$/.test(d.startDate||''),validWeek=Number.isInteger(+d.manualWeek)&&+d.manualWeek>=1&&+d.manualWeek<=8;if(!validRecords||!validDate||!validWeek)throw 0;if(!confirm(`현재 기록을 백업 파일의 ${Object.keys(d.records).length}개 기록으로 바꿀까요?`))return;state.startDate=d.startDate;state.manualWeek=+d.manualWeek;state.records=d.records;state.lastBackupAt=d.exportedAt||d.lastBackupAt||new Date().toISOString();save();render();toast('백업을 안전하게 불러왔어요')}catch{alert('올바른 백업 파일이 아닙니다.')}finally{e.target.value=''}};
+    document.querySelector('#updateBtn').onclick=async()=>{try{const reg=await navigator.serviceWorker?.getRegistration();await reg?.update();toast('최신 버전을 확인했어요')}catch{toast('인터넷 연결을 확인해주세요')}};
     document.querySelector('#clearBtn').onclick=()=>{if(confirm('모든 운동 기록과 설정을 삭제할까요?')){localStorage.removeItem(key);location.reload()}};
-    save();render();showTimer();if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js');
+    save();render();showTimer();if('serviceWorker'in navigator){let refreshing=false;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(refreshing)return;refreshing=true;location.reload()});navigator.serviceWorker.register('sw.js').then(reg=>reg.update())}
   </script>
 </body>
 </html>
