@@ -11,155 +11,192 @@
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <title>30분 러닝</title>
   <style>
-    :root{--ink:#173f35;--muted:#6f7e78;--cream:#f5f2e9;--paper:#fffdf7;--mint:#cfe7dc;--lime:#d9ee91;--orange:#ff9b61;--line:#dce3de;--danger:#a74336}
+    :root{--ink:#173f35;--ink2:#28594c;--muted:#6f7e78;--cream:#f5f2e9;--paper:#fffdf7;--mint:#cfe7dc;--lime:#d9ee91;--orange:#ff9b61;--line:#dce3de;--danger:#a74336;--blue:#8cc7db}
     *{box-sizing:border-box}html{background:var(--ink)}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;color:var(--ink);background:var(--cream);min-height:100vh;padding-bottom:calc(84px + env(safe-area-inset-bottom))}
-    button,input,textarea,select{font:inherit}button{cursor:pointer}.top{background:var(--ink);color:white;padding:calc(18px + env(safe-area-inset-top)) 20px 26px;border-radius:0 0 28px 28px}.brand{display:flex;align-items:center;justify-content:space-between}.brand h1{font-size:22px;margin:0;max-width:75%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.brand small{color:#cce0d9}.hero{margin-top:22px;display:grid;grid-template-columns:1fr auto;gap:14px;align-items:end}.hero h2{font-size:30px;line-height:1.15;margin:3px 0 6px}.hero p{margin:0;color:#d5e4df;font-size:14px}.ring{width:72px;height:72px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--lime) var(--progress,0%),#41655c 0);position:relative}.ring:after{content:"";position:absolute;inset:7px;border-radius:50%;background:var(--ink)}.ring b{position:relative;z-index:1;font-size:17px}.wrap{padding:18px;max-width:680px;margin:auto}.view{display:none}.view.active{display:block}.card{background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:18px;margin-bottom:14px;box-shadow:0 8px 24px rgba(23,63,53,.06)}.eyebrow{font-size:12px;font-weight:800;letter-spacing:.08em;color:#5e766d;text-transform:uppercase}.card h3{font-size:21px;margin:6px 0 8px}.detail{color:var(--muted);font-size:14px;line-height:1.55}.pill{display:inline-flex;align-items:center;gap:6px;background:var(--mint);padding:7px 10px;border-radius:99px;font-size:13px;font-weight:700}.pill.orange{background:#ffe0ce}.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}.btn{border:0;border-radius:14px;padding:14px 15px;font-weight:800;background:var(--ink);color:white}.btn.alt{background:var(--mint);color:var(--ink)}.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}.btn.danger{color:var(--danger);border-color:#e7b9b2;background:transparent}.adjust{border-left:5px solid var(--orange)}.weekline{display:flex;gap:6px;margin:14px 0 2px}.dot{height:7px;flex:1;border-radius:8px;background:#dce3de}.dot.done{background:var(--ink)}.dot.today{background:var(--orange)}.day{display:grid;grid-template-columns:44px 1fr auto;gap:10px;align-items:center;padding:14px 0;border-bottom:1px solid var(--line)}.day:last-child{border:0}.dayname{font-weight:900}.day.today .dayname{color:#d85b24}.day strong{display:block;font-size:15px}.day small{color:var(--muted);line-height:1.4}.status{width:27px;height:27px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;font-size:14px}.status.done{background:var(--ink);border-color:var(--ink);color:white}.field{margin:13px 0}.field label{display:block;font-size:13px;font-weight:800;margin-bottom:7px}.field input,.field textarea,.field select{width:100%;border:1px solid var(--line);border-radius:12px;background:white;padding:12px;color:var(--ink)}.field textarea{min-height:72px;resize:vertical}.field-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 10px}.seg{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}.seg.mode{grid-template-columns:repeat(3,1fr);margin-top:10px}.seg button{border:1px solid var(--line);background:white;border-radius:10px;padding:10px 0;color:var(--ink)}.seg button.on{background:var(--ink);color:white;border-color:var(--ink)}.derived{background:var(--mint);border-radius:12px;padding:11px 13px;margin:10px 0 14px;font-size:13px;font-weight:800}.record{padding:13px 0;border-bottom:1px solid var(--line)}.record:last-child{border:0}.record-top{display:flex;justify-content:space-between;gap:12px}.empty{text-align:center;padding:25px 10px;color:var(--muted)}.privacy{font-size:12px;color:var(--muted);line-height:1.55}.nav{position:fixed;left:10px;right:10px;bottom:calc(10px + env(safe-area-inset-bottom));height:66px;background:rgba(255,253,247,.94);backdrop-filter:blur(18px);border:1px solid var(--line);border-radius:20px;display:grid;grid-template-columns:repeat(4,1fr);z-index:5;box-shadow:0 8px 30px rgba(23,63,53,.15)}.nav button{border:0;background:transparent;color:var(--muted);font-size:12px;font-weight:700}.nav button span{display:block;font-size:20px;margin-bottom:2px}.nav button.on{color:var(--ink)}.toast{position:fixed;left:50%;bottom:100px;transform:translate(-50%,15px);background:var(--ink);color:white;padding:11px 16px;border-radius:99px;opacity:0;pointer-events:none;transition:.25s;z-index:10;font-size:14px;white-space:nowrap}.toast.show{opacity:1;transform:translate(-50%,0)}
-    @media(min-width:700px){.nav{left:50%;width:660px;transform:translateX(-50%)}.top>div{max-width:640px;margin:auto}}
+    button,input,textarea,select{font:inherit}button{cursor:pointer}.top{background:var(--ink);color:white;padding:calc(18px + env(safe-area-inset-top)) 20px 26px;border-radius:0 0 28px 28px}.brand{display:flex;align-items:center;justify-content:space-between;gap:12px}.brand h1{font-size:22px;margin:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.brand small{color:#cce0d9;white-space:nowrap}.hero{margin-top:22px;display:grid;grid-template-columns:1fr auto;gap:14px;align-items:end}.hero h2{font-size:30px;line-height:1.15;margin:3px 0 6px}.hero p{margin:0;color:#d5e4df;font-size:14px}.ring{width:76px;height:76px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--lime) var(--progress,0%),#41655c 0);position:relative}.ring:after{content:"";position:absolute;inset:7px;border-radius:50%;background:var(--ink)}.ring b{position:relative;z-index:1;font-size:16px}.wrap{padding:18px;max-width:720px;margin:auto}.view{display:none}.view.active{display:block}.card{background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:18px;margin-bottom:14px;box-shadow:0 8px 24px rgba(23,63,53,.06)}.eyebrow{font-size:12px;font-weight:800;letter-spacing:.08em;color:#5e766d;text-transform:uppercase}.card h3{font-size:21px;margin:6px 0 8px}.detail{color:var(--muted);font-size:14px;line-height:1.55}.pill{display:inline-flex;align-items:center;gap:5px;background:var(--mint);padding:7px 10px;border-radius:99px;font-size:13px;font-weight:800}.pill.run{background:#d9ee91}.pill.stairs{background:#ffe0ce}.pill.bike{background:#d7edf4}.summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}.summary>div{background:#f0f4f1;border-radius:14px;padding:12px 8px;text-align:center}.summary b{display:block;font-size:21px}.summary small{color:var(--muted);font-size:11px}.field{margin:13px 0}.field label{display:block;font-size:13px;font-weight:800;margin-bottom:7px}.field input,.field textarea,.field select{width:100%;border:1px solid var(--line);border-radius:12px;background:white;padding:12px;color:var(--ink)}.field textarea{min-height:70px;resize:vertical}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.seg{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.seg button{border:1px solid var(--line);background:white;border-radius:12px;padding:12px 4px;color:var(--ink);font-weight:800}.seg button.on{background:var(--ink);color:white;border-color:var(--ink)}.effort{grid-template-columns:repeat(5,1fr)}.effort button{padding:10px 0}.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}.btn{border:0;border-radius:14px;padding:14px 15px;font-weight:800;background:var(--ink);color:white}.btn.alt{background:var(--mint);color:var(--ink)}.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}.btn.danger{color:var(--danger);border-color:#e7b9b2;background:transparent}.date-head{display:flex;align-items:center;justify-content:space-between;gap:12px}.date-head input{border:1px solid var(--line);border-radius:12px;padding:9px;background:white;color:var(--ink);max-width:160px}.daily-total{font-size:38px;font-weight:900;margin:8px 0 4px}.breakdown{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}.progress{height:12px;background:#e2e7e4;border-radius:99px;overflow:hidden;margin:14px 0 8px}.progress i{display:block;height:100%;width:var(--progress,0%);background:linear-gradient(90deg,var(--ink2),var(--lime));border-radius:inherit}.week-nav{display:grid;grid-template-columns:46px 1fr 46px;gap:8px;align-items:center;margin-top:12px}.week-nav button{height:42px;border:1px solid var(--line);border-radius:12px;background:white;color:var(--ink);font-weight:900}.week-nav input{width:100%;height:42px;border:1px solid var(--line);border-radius:12px;padding:8px;background:white;color:var(--ink)}.day{display:grid;grid-template-columns:48px 1fr auto;gap:10px;align-items:center;padding:14px 0;border-bottom:1px solid var(--line)}.day:last-child{border:0}.day button{all:unset;display:contents}.dayname{font-weight:900}.day.today .dayname{color:#d85b24}.day strong{display:block;font-size:15px}.day small{color:var(--muted);line-height:1.5}.day-total{font-size:18px;font-weight:900}.metric{margin-top:14px}.chart{display:flex;align-items:flex-end;gap:9px;height:220px;overflow-x:auto;padding:16px 2px 0}.bar-item{min-width:52px;flex:1;height:100%;display:grid;grid-template-rows:24px 1fr 30px;text-align:center}.bar-value{font-size:11px;font-weight:800}.bar-track{height:100%;display:flex;align-items:flex-end;justify-content:center;border-bottom:1px solid var(--line);position:relative}.bar{width:28px;min-height:3px;height:var(--height);background:var(--ink);border-radius:8px 8px 2px 2px;transition:.25s}.bar.total{background:linear-gradient(var(--lime),var(--ink2))}.bar.run{background:#9dbe37}.bar.stairs{background:var(--orange)}.bar.bike{background:var(--blue)}.bar-label{font-size:10px;color:var(--muted);padding-top:6px;white-space:nowrap}.record{padding:13px 0;border-bottom:1px solid var(--line)}.record:last-child{border:0}.record-top{display:flex;justify-content:space-between;gap:12px}.empty{text-align:center;padding:25px 10px;color:var(--muted)}.privacy{font-size:12px;color:var(--muted);line-height:1.55}.nav{position:fixed;left:10px;right:10px;bottom:calc(10px + env(safe-area-inset-bottom));height:66px;background:rgba(255,253,247,.94);backdrop-filter:blur(18px);border:1px solid var(--line);border-radius:20px;display:grid;grid-template-columns:repeat(4,1fr);z-index:5;box-shadow:0 8px 30px rgba(23,63,53,.15)}.nav button{border:0;background:transparent;color:var(--muted);font-size:12px;font-weight:700}.nav button span{display:block;font-size:20px;margin-bottom:2px}.nav button.on{color:var(--ink)}.toast{position:fixed;left:50%;bottom:100px;transform:translate(-50%,15px);background:var(--ink);color:white;padding:11px 16px;border-radius:99px;opacity:0;pointer-events:none;transition:.25s;z-index:10;font-size:14px;white-space:nowrap;max-width:90vw;overflow:hidden;text-overflow:ellipsis}.toast.show{opacity:1;transform:translate(-50%,0)}
+    .derived{background:var(--mint);border-radius:12px;padding:11px 13px;margin:10px 0 14px;font-size:13px;font-weight:800}
+    @media(max-width:390px){.grid2{grid-template-columns:1fr}.summary b{font-size:18px}.card{padding:16px}.hero h2{font-size:27px}}
+    @media(min-width:700px){.nav{left:50%;width:700px;transform:translateX(-50%)}.top>div{max-width:680px;margin:auto}}
   </style>
 </head>
 <body>
   <header class="top"><div>
-    <div class="brand"><h1 id="appTitleText">30분 러닝</h1><small id="weekLabel">1주차</small></div>
-    <div class="hero"><div><div class="eyebrow" style="color:#a8c8bd">TODAY</div><h2 id="heroTitle">천천히 시작해요</h2><p id="heroSub">30분이면 충분합니다.</p></div><div class="ring" id="ring"><b id="ringText">0/7</b></div></div>
+    <div class="brand"><h1 id="brandTitle">30분 러닝</h1><small id="weekLabel">주간 목표 150분</small></div>
+    <div class="hero"><div><div class="eyebrow" style="color:#a8c8bd">THIS WEEK</div><h2 id="heroTitle">0분 운동</h2><p id="heroSub">150분 목표를 천천히 채워보세요.</p></div><div class="ring" id="ring"><b id="ringText">0%</b></div></div>
   </div></header>
 
   <main class="wrap">
     <section class="view active" id="todayView">
       <article class="card">
-        <span class="pill" id="todayType">걷기 + 달리기</span>
-        <h3 id="todayName">오늘의 운동</h3>
-        <div class="detail" id="todayDetail"></div>
+        <div class="date-head"><div><div class="eyebrow">운동 날짜</div><h3 id="recordDateTitle">오늘 기록</h3></div><input type="date" id="recordDate"></div>
+        <div class="daily-total"><span id="dailyTotal">0</span><small style="font-size:15px">분</small></div>
+        <div class="detail">선택한 날짜의 유산소 운동 합계</div>
+        <div class="breakdown" id="dailyBreakdown"></div>
       </article>
-      <article class="card adjust"><div class="eyebrow">놓친 날 조정</div><h3 id="adjustTitle">몰아서 뛰지 마세요</h3><div class="detail" id="adjustText">빠진 운동은 건너뛰고 오늘 계획부터 이어갑니다.</div></article>
+
       <article class="card">
-        <div class="eyebrow">운동 모드</div>
-        <div class="seg mode" id="modeChoice"><button data-mode="run">🏃 달리기</button><button data-mode="bike">🚴 자전거</button><button data-mode="stairs">🪜 계단</button></div>
-        <div class="field-grid"><div class="field"><label for="minutes">운동 시간(분)</label><input id="minutes" inputmode="numeric" type="number" min="0" max="600" value="30"></div><div class="field"><label for="distance">거리(km)</label><input id="distance" inputmode="decimal" type="number" min="0" max="1000" step="0.01" placeholder="예: 4.2"></div><div class="field"><label for="heartRate">평균 심박수(bpm)</label><input id="heartRate" inputmode="numeric" type="number" min="30" max="240" placeholder="예: 135"></div></div>
+        <div class="eyebrow">종목별 기록</div><h3 id="formTitle">달리기 기록</h3>
+        <div class="seg" id="typeSeg"><button class="on" data-type="run">🏃 달리기</button><button data-type="stairs">🪜 계단</button><button data-type="bike">🚲 자전거</button></div>
+        <div class="grid2">
+          <div class="field"><label for="minutes">운동 시간(분)</label><input id="minutes" inputmode="numeric" type="number" min="0" max="600" placeholder="예: 30"></div>
+          <div class="field"><label for="heartRate">평균 심박수(bpm)</label><input id="heartRate" inputmode="numeric" type="number" min="0" max="250" placeholder="선택 입력"></div>
+        </div>
+        <div class="field"><label for="extra" id="extraLabel">거리(km)</label><input id="extra" inputmode="decimal" type="number" min="0" max="1000" step="0.01" placeholder="선택 입력"></div>
         <div id="modeFields"></div><div class="derived" id="derivedMetric">시간과 거리를 입력하면 페이스가 계산됩니다.</div>
-        <div class="field"><label>체감 강도</label><div class="seg" id="effort"><button data-v="1">1</button><button data-v="2">2</button><button class="on" data-v="3">3</button><button data-v="4">4</button><button data-v="5">5</button></div></div>
-        <div class="field"><label for="note">메모</label><textarea id="note" placeholder="몸 상태나 느낌을 짧게 적어보세요."></textarea></div>
-        <div class="actions"><button class="btn" id="saveDone">완료 저장</button><button class="btn ghost" id="saveRest">휴식 기록</button></div>
+        <div class="field"><label>체감 강도</label><div class="seg effort" id="effort"><button data-v="1">1</button><button data-v="2">2</button><button class="on" data-v="3">3</button><button data-v="4">4</button><button data-v="5">5</button></div></div>
+        <div class="field"><label for="note">메모</label><textarea id="note" placeholder="몸 상태나 운동 느낌을 적어보세요."></textarea></div>
+        <div class="actions"><button class="btn" id="saveEntry">기록 저장</button><button class="btn danger" id="deleteEntry">이 종목 삭제</button></div>
       </article>
     </section>
 
     <section class="view" id="weekView">
-      <article class="card"><div class="eyebrow">이번 주</div><h3 id="weekTitle">1주차 계획</h3><div class="detail" id="weekGoal"></div><div class="weekline" id="weekline"></div><div id="days"></div></article>
+      <article class="card">
+        <div class="eyebrow">주간 선택</div>
+        <div class="week-nav"><button id="prevWeek" aria-label="이전 주">‹</button><input type="date" id="weekDate"><button id="nextWeek" aria-label="다음 주">›</button></div>
+      </article>
+      <article class="card">
+        <div class="eyebrow">주간 유산소</div><h3 id="weekTitle">이번 주 0분</h3><div class="detail"><span id="weekRange"></span> · 목표 <b id="goalText">150분</b></div>
+        <div class="progress"><i id="weekProgress"></i></div><div class="detail" id="weekAchievement">달성률 0%</div>
+        <div class="summary"><div><b id="weekRun">0</b><small>달리기(분)</small></div><div><b id="weekStairs">0</b><small>계단(분)</small></div><div><b id="weekBike">0</b><small>자전거(분)</small></div></div>
+      </article>
+      <article class="card"><div class="eyebrow">요일별 합계</div><div id="days"></div></article>
     </section>
 
     <section class="view" id="recordsView">
-      <article class="card"><div class="eyebrow">내 기록</div><h3>운동 기록</h3><div id="records"></div></article>
+      <article class="card">
+        <div class="eyebrow">유산소 운동 추세</div><h3>주간 추세 분석</h3>
+        <div class="seg" id="metricSeg" style="grid-template-columns:repeat(4,1fr)"><button class="on" data-metric="total">총합</button><button data-metric="run">달리기</button><button data-metric="stairs">계단</button><button data-metric="bike">자전거</button></div>
+        <div class="field"><label for="trendWeeks">분석 기간</label><select id="trendWeeks"><option value="8">최근 8주</option><option value="12">최근 12주</option><option value="26">최근 26주</option></select></div>
+        <div class="summary metric"><div><b id="periodTotal">0</b><small>기간 합계(분)</small></div><div><b id="weeklyAverage">0</b><small>주평균(분)</small></div><div><b id="bestWeek">0</b><small>최고 주간(분)</small></div></div>
+        <div class="chart" id="trendChart"></div>
+      </article>
+      <article class="card"><div class="eyebrow">운동 일기</div><h3>날짜별 기록</h3><div id="records"></div></article>
     </section>
 
     <section class="view" id="settingsView">
       <article class="card">
-        <div class="eyebrow">설정</div><h3>나의 진행 단계</h3>
-        <div class="field"><label for="appTitleInput">상단 앱 제목</label><input type="text" id="appTitleInput" maxlength="24" placeholder="예: 준화의 운동일지"></div>
-        <div class="field"><label for="startDate">프로그램 시작일</label><input type="date" id="startDate"></div>
-        <div class="field"><label for="manualWeek">시작일에 적용할 주차</label><select id="manualWeek"></select></div>
+        <div class="eyebrow">설정</div><h3>나의 운동 목표</h3>
+        <div class="field"><label for="appTitle">앱 제목</label><input id="appTitle" maxlength="24"></div>
+        <div class="field"><label for="weeklyGoal">주간 유산소 목표(분)</label><input type="number" id="weeklyGoal" min="30" max="1000" step="10"></div>
         <button class="btn" id="saveSettings" style="width:100%">설정 저장</button>
       </article>
-      <article class="card"><div class="eyebrow">백업</div><h3>기록 지키기</h3><p class="detail">기록은 이 아이폰에만 저장됩니다. 앱 데이터 삭제에 대비해 백업 파일을 보관할 수 있습니다.</p><p class="privacy" id="backupStatus"></p><div class="actions"><button class="btn alt" id="exportBtn">백업 파일</button><button class="btn ghost" id="importBtn">백업 불러오기</button></div><input id="importFile" type="file" accept="application/json" hidden></article>
-      <article class="card"><div class="eyebrow">앱 정보</div><h3>운동 기록 <span id="appVersion">v1.2.0</span></h3><p class="detail">새 기능이 보이지 않을 때 업데이트를 확인해보세요.</p><button class="btn ghost" id="updateBtn" style="width:100%">업데이트 확인</button></article>
-      <article class="card"><div class="eyebrow">데이터 관리</div><p class="privacy">외부 계정, 광고, 분석 도구를 사용하지 않습니다. 모든 운동 기록과 설정은 이 앱의 로컬 저장공간에만 보관됩니다.</p><button class="btn danger" id="clearBtn" style="width:100%;margin-top:10px">모든 기록 삭제</button></article>
+      <article class="card"><div class="eyebrow">백업</div><h3>기록 내보내기</h3><p class="detail">운동 기록은 이 휴대폰에만 저장됩니다. 앱을 삭제하거나 브라우저 데이터를 지우기 전에 백업하세요.</p><div class="actions"><button class="btn alt" id="exportBtn">백업 파일</button><button class="btn ghost" id="importBtn">백업 불러오기</button></div><input id="importFile" type="file" accept="application/json" hidden></article>
+      <article class="card"><div class="eyebrow">앱 정보</div><p class="privacy">외부 계정, 광고, 분석 도구를 사용하지 않습니다. 모든 기록은 이 앱의 로컬 저장공간에만 보관됩니다. · ver 2.0</p><button class="btn ghost" id="updateBtn" style="width:100%;margin:8px 0 10px">최신 버전 확인</button><button class="btn danger" id="clearBtn" style="width:100%">모든 기록 삭제</button></article>
     </section>
   </main>
 
-  <nav class="nav"><button class="on" data-view="today"><span>●</span>오늘</button><button data-view="week"><span>▦</span>주간</button><button data-view="records"><span>✓</span>기록</button><button data-view="settings"><span>⚙</span>설정</button></nav>
+  <nav class="nav"><button class="on" data-view="today"><span>＋</span>오늘</button><button data-view="week"><span>▦</span>주간</button><button data-view="records"><span>⌁</span>기록</button><button data-view="settings"><span>⚙</span>설정</button></nav>
   <div class="toast" id="toast"></div>
   <script>
-    const DAYS=['일','월','화','수','목','금','토'];
-    const PROGRAM=[
-      {goal:'달리기에 적응하는 주',run:'5분 걷기 → 1분 달리기·2분 걷기 × 6 → 7분 걷기'},
-      {goal:'편안한 호흡을 익히는 주',run:'5분 걷기 → 90초 달리기·2분 걷기 × 6 → 4분 걷기'},
-      {goal:'달리기 구간을 조금 늘리는 주',run:'5분 걷기 → 2분 달리기·2분 걷기 × 5 → 5분 걷기'},
-      {goal:'짧지만 안정적으로 달리는 주',run:'5분 걷기 → 3분 달리기·2분 걷기 × 4 → 5분 걷기'},
-      {goal:'5분 연속 달리기에 익숙해지는 주',run:'5분 걷기 → 5분 달리기·2분 걷기 × 3 → 4분 걷기'},
-      {goal:'호흡을 유지하며 8분 달리는 주',run:'5분 걷기 → 8분 달리기·2분 걷기 × 2 → 5분 걷기'},
-      {goal:'긴 달리기 구간에 적응하는 주',run:'5분 걷기 → 10분 달리기·2분 걷기 × 2 → 1분 걷기'},
-      {goal:'20분 연속 달리기를 완성하는 주',run:'5분 걷기 → 편안하게 20분 달리기 → 5분 걷기'}
-    ];
-    const DAY_PLAN=[
-      {name:'회복 걷기',type:'회복',detail:'편안한 걷기 25분 + 가벼운 스트레칭 5분'},
-      {name:'걷기·달리기',type:'러닝',run:true},
-      {name:'빠른 걷기',type:'걷기',detail:'대화 가능한 속도로 빠르게 걷기 30분'},
-      {name:'걷기·달리기',type:'러닝',run:true},
-      {name:'편안한 걷기',type:'회복',detail:'느긋한 걷기 25분 + 발목·종아리 풀기 5분'},
-      {name:'걷기·달리기',type:'러닝',run:true},
-      {name:'자유 운동',type:'선택',detail:'몸이 가벼우면 빠른 걷기 30분, 피곤하면 회복 걷기 30분'}
-    ];
-    const MODE_META={run:{label:'달리기',emoji:'🏃'},bike:{label:'자전거',emoji:'🚴'},stairs:{label:'계단',emoji:'🪜'}};
-    const MODE_PLANS={
-      bike:[
-        {name:'회복 라이딩',type:'회복',detail:'가벼운 기어로 편안하게 30분'},
-        {name:'자전거 인터벌',type:'자전거',detail:'5분 준비 → 2분 빠르게·3분 편하게 × 4 → 5분 정리'},
-        {name:'편안한 라이딩',type:'지구력',detail:'대화 가능한 강도로 30분'},
-        {name:'템포 라이딩',type:'자전거',detail:'5분 준비 → 약간 숨찬 강도로 20분 → 5분 정리'},
-        {name:'회복 라이딩',type:'회복',detail:'다리에 부담 없는 강도로 30분'},
-        {name:'케이던스 훈련',type:'자전거',detail:'편한 기어에서 일정한 페달 회전으로 30분'},
-        {name:'자유 라이딩',type:'선택',detail:'몸 상태에 따라 편안한 라이딩 또는 휴식'}
-      ],
-      stairs:[
-        {name:'회복 걷기',type:'회복',detail:'평지 걷기 25분 + 종아리 스트레칭 5분'},
-        {name:'계단 인터벌',type:'계단',detail:'5분 준비 → 2분 오르기·2분 회복 × 5 → 5분 정리'},
-        {name:'편안한 계단',type:'지구력',detail:'난간을 활용해 무리 없는 속도로 30분'},
-        {name:'계단 인터벌',type:'계단',detail:'5분 준비 → 3분 오르기·2분 회복 × 4 → 5분 정리'},
-        {name:'회복 걷기',type:'회복',detail:'평지에서 가볍게 걷고 발목·종아리 풀기'},
-        {name:'지속 계단',type:'계단',detail:'호흡이 무너지지 않는 속도로 30분'},
-        {name:'자유 운동',type:'선택',detail:'무릎 상태가 좋으면 계단, 불편하면 평지 걷기'}
-      ]
-    };
-    const key='running30-v1',APP_VERSION='1.2.0';
+    const KEY='running30-v1',TYPES=['run','stairs','bike'];
+    const TYPE_INFO={run:{name:'달리기',icon:'🏃',extra:'거리(km)',unit:'km'},stairs:{name:'계단',icon:'🪜',extra:'오른 층수',unit:'층'},bike:{name:'자전거',icon:'🚲',extra:'거리(km)',unit:'km'}};
+    const $=s=>document.querySelector(s),$$=s=>document.querySelectorAll(s);
     const iso=d=>{const x=new Date(d);x.setMinutes(x.getMinutes()-x.getTimezoneOffset());return x.toISOString().slice(0,10)};
-    const localDate=s=>{const [y,m,d]=String(s).split('-').map(Number);return new Date(y,m-1,d,12)};
-    const monday=d=>{const x=new Date(d);const n=(x.getDay()+6)%7;x.setDate(x.getDate()-n);x.setHours(0,0,0,0);return x};
-    const state=JSON.parse(localStorage.getItem(key)||'null')||{startDate:iso(new Date()),manualWeek:1,records:{}};
-    state.appTitle=state.appTitle||'30분 러닝';state.activeMode=MODE_META[state.activeMode]?state.activeMode:'run';state.records=state.records||{};
-    const save=()=>localStorage.setItem(key,JSON.stringify(state));
-    function currentWeek(onDate=new Date()){const start=localDate(state.startDate),today=new Date(onDate.getFullYear(),onDate.getMonth(),onDate.getDate(),12),elapsed=Math.max(0,Math.floor((today-start)/86400000)),added=Math.floor(elapsed/7);return Math.max(1,Math.min(8,(+state.manualWeek||1)+added))}
-    function planFor(date,mode=state.activeMode){const w=currentWeek();if(mode==='run'){const p=DAY_PLAN[date.getDay()];return {...p,detail:p.run?PROGRAM[w-1].run:p.detail,week:w}}const p=MODE_PLANS[mode][date.getDay()];return {...p,week:w}}
-    function dateLabel(s){return new Intl.DateTimeFormat('ko-KR',{month:'short',day:'numeric',weekday:'short'}).format(new Date(s+'T12:00:00'))}
-    const numeric=v=>Number.isFinite(+v)&&+v>=0?+v:'';
-    let effort=3;
-    function renderModeFields(r={}){
-      const box=document.querySelector('#modeFields'),v=(k)=>numeric(r[k]);
-      if(state.activeMode==='run')box.innerHTML=`<div class="field-grid"><div class="field"><label for="cadence">평균 케이던스(spm)</label><input id="cadence" inputmode="numeric" type="number" min="0" max="300" value="${v('cadence')}" placeholder="예: 165"></div><div class="field"><label for="elevation">고도상승(m)</label><input id="elevation" inputmode="numeric" type="number" min="0" max="10000" value="${v('elevation')}" placeholder="선택 입력"></div></div>`;
-      if(state.activeMode==='bike')box.innerHTML=`<div class="field-grid"><div class="field"><label for="cadence">평균 케이던스(rpm)</label><input id="cadence" inputmode="numeric" type="number" min="0" max="250" value="${v('cadence')}" placeholder="예: 80"></div><div class="field"><label for="power">평균 파워(W)</label><input id="power" inputmode="numeric" type="number" min="0" max="2500" value="${v('power')}" placeholder="선택 입력"></div><div class="field"><label for="elevation">고도상승(m)</label><input id="elevation" inputmode="numeric" type="number" min="0" max="20000" value="${v('elevation')}" placeholder="선택 입력"></div></div>`;
-      if(state.activeMode==='stairs')box.innerHTML=`<div class="field-grid"><div class="field"><label for="floors">오른 층수(층)</label><input id="floors" inputmode="numeric" type="number" min="0" max="2000" value="${v('floors')}" placeholder="예: 30"></div><div class="field"><label for="elevation">고도상승(m)</label><input id="elevation" inputmode="numeric" type="number" min="0" max="10000" value="${v('elevation')}" placeholder="선택 입력"></div></div>`;
-      box.querySelectorAll('input').forEach(x=>x.addEventListener('input',updateDerived));
+    const dateFrom=s=>new Date(s+'T12:00:00');
+    const addDays=(d,n)=>{const x=new Date(d);x.setDate(x.getDate()+n);return x};
+    const monday=d=>{const x=new Date(d);const n=(x.getDay()+6)%7;x.setDate(x.getDate()-n);x.setHours(12,0,0,0);return x};
+    const fmt=s=>new Intl.DateTimeFormat('ko-KR',{month:'short',day:'numeric',weekday:'short'}).format(dateFrom(s));
+    const short=s=>new Intl.DateTimeFormat('ko-KR',{month:'numeric',day:'numeric'}).format(dateFrom(s));
+    const num=v=>Math.max(0,Number(v)||0);
+    const esc=s=>String(s||'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+    function normalize(source){
+      const src=source&&typeof source==='object'?source:{};
+      const out={...src,appTitle:src.appTitle||'30분 러닝',weeklyGoal:num(src.weeklyGoal)||150,records:{}};
+      Object.entries(src.records||{}).forEach(([date,r])=>{
+        if(!r||typeof r!=='object')return;
+        if(Array.isArray(r.entries)){
+          const entries=r.entries.filter(e=>e&&TYPES.includes(e.type)&&num(e.minutes)>0).map(e=>({...e,minutes:num(e.minutes),heartRate:num(e.heartRate),extra:num(e.extra),cadence:num(e.cadence),power:num(e.power),elevation:num(e.elevation),effort:num(e.effort)||3,note:String(e.note||'')}));
+          if(entries.length)out.records[date]={entries};
+        }else if(r.status==='done'&&num(r.minutes)>0){
+          const oldType=r.type||r.mode,type=TYPES.includes(oldType)?oldType:'run';
+          out.records[date]={entries:[{type,minutes:num(r.minutes),heartRate:num(r.heartRate),extra:num(r.distance||r.floors),cadence:num(r.cadence),power:num(r.power),elevation:num(r.elevation),effort:num(r.effort)||3,note:String(r.note||''),savedAt:r.savedAt||new Date().toISOString(),migrated:true}]};
+        }
+      });
+      return out;
     }
-    function updateDerived(){const minutes=+document.querySelector('#minutes').value,distance=+document.querySelector('#distance').value,out=document.querySelector('#derivedMetric');if(state.activeMode==='run'){if(minutes>0&&distance>0){const total=Math.round(minutes/distance*60),m=Math.floor(total/60),s=total%60;out.textContent=`평균 페이스 ${m}'${String(s).padStart(2,'0')}\"/km`}else out.textContent='시간과 거리를 입력하면 페이스가 계산됩니다.'}if(state.activeMode==='bike')out.textContent=minutes>0&&distance>0?`평균 속도 ${(distance/(minutes/60)).toFixed(1)}km/h`:'시간과 거리를 입력하면 평균속도가 계산됩니다.';if(state.activeMode==='stairs'){const floors=+document.querySelector('#floors')?.value;out.textContent=minutes>0&&floors>0?`분당 ${(floors/minutes).toFixed(1)}층`:'시간과 층수를 입력하면 분당 층수가 계산됩니다.'}}
-    function render(){
-      const now=new Date(),today=iso(now),w=currentWeek(),p=planFor(now),weekStart=monday(now);
-      document.title=state.appTitle;document.querySelector('#appTitleText').textContent=state.appTitle;document.querySelector('#weekLabel').textContent=w+'주차';document.querySelector('#heroTitle').textContent=p.name;document.querySelector('#heroSub').textContent=state.activeMode==='run'?PROGRAM[w-1].goal:`${MODE_META[state.activeMode].label} · ${w}주차`;
-      document.querySelector('#todayType').textContent=p.type;document.querySelector('#todayName').textContent=p.name+' · 30분';document.querySelector('#todayDetail').textContent=p.detail;
-      const dates=[...Array(7)].map((_,i)=>{const d=new Date(weekStart);d.setDate(d.getDate()+i);return iso(d)}),done=dates.filter(d=>state.records[d]?.status==='done').length;
-      document.querySelector('#ring').style.setProperty('--progress',(done/7*100)+'%');document.querySelector('#ringText').textContent=done+'/7';
-      document.querySelector('#weekTitle').textContent=`${MODE_META[state.activeMode].label} · ${w}주차 계획`;document.querySelector('#weekGoal').textContent=(state.activeMode==='run'?PROGRAM[w-1].goal:'몸 상태에 맞춰 강도를 조절하세요.')+' · 권장 시간은 30분입니다.';
-      document.querySelector('#weekline').innerHTML=dates.map(d=>`<i class="dot ${state.records[d]?.status==='done'?'done':d===today?'today':''}"></i>`).join('');
-      document.querySelector('#days').innerHTML=dates.map((s,i)=>{const d=new Date(s+'T12:00:00'),q=planFor(d),r=state.records[s];return `<div class="day ${s===today?'today':''}"><div class="dayname">${['월','화','수','목','금','토','일'][i]}</div><div><strong>${q.name}</strong><small>${q.detail}</small></div><span class="status ${r?'done':''}">${r?(r.status==='done'?'✓':'–'):''}</span></div>`}).join('');
-      const missed=dates.filter(d=>d<today&&!state.records[d]);
-      document.querySelector('#adjustTitle').textContent=missed.length?`${missed.length}일을 놓쳤어요. 괜찮습니다.`:'몰아서 뛰지 마세요';
-      document.querySelector('#adjustText').textContent=missed.length?'빠진 운동은 건너뛰고 오늘 계획부터 이어가세요. 몸이 무거우면 회복 운동이나 휴식으로 바꿔도 됩니다.':'빠진 운동은 다음 날 두 배로 하지 않습니다. 일정은 그대로 두고 오늘 계획부터 이어갑니다.';
-      renderRecords();document.querySelector('#appTitleInput').value=state.appTitle;document.querySelector('#startDate').value=state.startDate;document.querySelector('#manualWeek').value=state.manualWeek;
-      const count=Object.keys(state.records).length,last=state.lastBackupAt?dateLabel(iso(new Date(state.lastBackupAt))):'아직 없음';document.querySelector('#backupStatus').textContent=`저장된 기록 ${count}개 · 마지막 백업 ${last}`;
-      document.querySelectorAll('#modeChoice button').forEach(b=>b.classList.toggle('on',b.dataset.mode===state.activeMode));const r=state.records[today],same=r&&(r.mode||'run')===state.activeMode,q=same?r:{};document.querySelector('#minutes').value=q.minutes??30;document.querySelector('#distance').value=q.distance??'';document.querySelector('#heartRate').value=q.heartRate??'';document.querySelector('#note').value=q.note??'';effort=q.effort??3;document.querySelectorAll('#effort button').forEach(b=>b.classList.toggle('on',+b.dataset.v===effort));renderModeFields(q);updateDerived();
+    let state=normalize(JSON.parse(localStorage.getItem(KEY)||'null'));
+    let selectedDate=iso(new Date()),selectedType='run',effort=3,weekAnchor=selectedDate,metric='total';
+    const save=()=>localStorage.setItem(KEY,JSON.stringify(state));
+    const entriesFor=d=>state.records[d]?.entries||[];
+    const entryFor=(d,t)=>entriesFor(d).find(e=>e.type===t);
+    const dayValue=(d,t)=>entriesFor(d).filter(e=>!t||e.type===t).reduce((s,e)=>s+num(e.minutes),0);
+    const sumRange=(start,end,t)=>Object.keys(state.records).filter(d=>d>=start&&d<=end).reduce((s,d)=>s+dayValue(d,t),0);
+    const breakdown=d=>Object.fromEntries(TYPES.map(t=>[t,dayValue(d,t)]));
+    function weekData(anchor){
+      const start=monday(dateFrom(anchor)),dates=[...Array(7)].map((_,i)=>iso(addDays(start,i))),end=dates[6];
+      const values=Object.fromEntries(TYPES.map(t=>[t,sumRange(dates[0],end,t)]));
+      return {start:dates[0],end,dates,values,total:Object.values(values).reduce((a,b)=>a+b,0)};
     }
-    function summaryMetric(r){const minutes=+r.minutes,distance=+r.distance,mode=r.mode||'run';if(mode==='run'&&minutes>0&&distance>0){const total=Math.round(minutes/distance*60),m=Math.floor(total/60),s=total%60;return `페이스 ${m}'${String(s).padStart(2,'0')}\"/km`}if(mode==='bike'&&minutes>0&&distance>0)return `평균 ${(distance/(minutes/60)).toFixed(1)}km/h`;if(mode==='stairs'&&minutes>0&&+r.floors>0)return `분당 ${(+r.floors/minutes).toFixed(1)}층`;return ''}
-    function renderRecords(){const rows=Object.entries(state.records).sort((a,b)=>b[0].localeCompare(a[0]));document.querySelector('#records').innerHTML=rows.length?rows.map(([d,r])=>{const mode=r.mode||'run',m=MODE_META[mode]||MODE_META.run,parts=[];if(r.status==='done'){parts.push(`${r.minutes||0}분`);if(+r.distance>0)parts.push(`${r.distance}km`);if(+r.heartRate>0)parts.push(`심박 ${r.heartRate}`);if(summaryMetric(r))parts.push(summaryMetric(r));if(mode==='run'&&+r.cadence>0)parts.push(`케이던스 ${r.cadence}`);if(mode==='bike'&&+r.power>0)parts.push(`파워 ${r.power}W`);if(mode==='stairs'&&+r.floors>0)parts.push(`${r.floors}층`);if(+r.elevation>0)parts.push(`상승 ${r.elevation}m`);parts.push(`강도 ${r.effort||3}/5`)}return `<div class="record"><div class="record-top"><strong>${dateLabel(d)} · ${m.emoji} ${m.label}</strong><span class="pill ${r.status==='rest'?'orange':''}">${r.status==='done'?'완료':'휴식'}</span></div><div class="detail">${parts.join(' · ')}${r.note?' · '+escapeHtml(r.note):''}</div></div>`}).join(''):'<div class="empty">아직 저장된 기록이 없습니다.</div>'}
-    const escapeHtml=s=>s.replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
-    function toast(s){const t=document.querySelector('#toast');t.textContent=s;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1800)}
-    document.querySelectorAll('#modeChoice button').forEach(b=>b.onclick=()=>{state.activeMode=b.dataset.mode;save();render()});document.querySelector('#minutes').addEventListener('input',updateDerived);document.querySelector('#distance').addEventListener('input',updateDerived);
-    document.querySelectorAll('#effort button').forEach(b=>b.onclick=()=>{effort=+b.dataset.v;document.querySelectorAll('#effort button').forEach(x=>x.classList.toggle('on',x===b))});
-    function record(status){const minutes=status==='done'?+(document.querySelector('#minutes').value||0):0;if(status==='done'&&minutes<=0){alert('운동 시간을 입력해주세요.');return}state.records[iso(new Date())]={status,mode:state.activeMode,minutes,distance:status==='done'?+(document.querySelector('#distance').value||0):0,heartRate:status==='done'?+(document.querySelector('#heartRate').value||0):0,cadence:status==='done'?+(document.querySelector('#cadence')?.value||0):0,power:status==='done'?+(document.querySelector('#power')?.value||0):0,floors:status==='done'?+(document.querySelector('#floors')?.value||0):0,elevation:status==='done'?+(document.querySelector('#elevation')?.value||0):0,effort,note:document.querySelector('#note').value.trim(),savedAt:new Date().toISOString()};save();render();toast(status==='done'?'오늘 운동을 저장했어요':'휴식으로 기록했어요')}
-    document.querySelector('#saveDone').onclick=()=>record('done');document.querySelector('#saveRest').onclick=()=>record('rest');
-    document.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('on',x===b));document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));document.querySelector('#'+b.dataset.view+'View').classList.add('active');window.scrollTo({top:0,behavior:'smooth'})});
-    const sel=document.querySelector('#manualWeek');PROGRAM.forEach((p,i)=>sel.insertAdjacentHTML('beforeend',`<option value="${i+1}">${i+1}주차</option>`));
-    document.querySelector('#saveSettings').onclick=()=>{state.appTitle=document.querySelector('#appTitleInput').value.trim()||'30분 러닝';state.startDate=document.querySelector('#startDate').value||iso(new Date());state.manualWeek=+sel.value;save();render();toast(`설정 저장 · 현재 ${currentWeek()}주차`)};
-    document.querySelector('#exportBtn').onclick=()=>{state.lastBackupAt=new Date().toISOString();save();render();const data={schemaVersion:1,appVersion:APP_VERSION,exportedAt:state.lastBackupAt,...state},blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='30분러닝-백업-'+iso(new Date())+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);toast('백업 파일을 만들었어요')};
-    document.querySelector('#importBtn').onclick=()=>document.querySelector('#importFile').click();document.querySelector('#importFile').onchange=async e=>{try{const file=e.target.files?.[0];if(!file)return;const d=JSON.parse(await file.text()),validRecords=d.records&&typeof d.records==='object'&&!Array.isArray(d.records),validDate=/^\d{4}-\d{2}-\d{2}$/.test(d.startDate||''),validWeek=Number.isInteger(+d.manualWeek)&&+d.manualWeek>=1&&+d.manualWeek<=8;if(!validRecords||!validDate||!validWeek)throw 0;if(!confirm(`현재 기록을 백업 파일의 ${Object.keys(d.records).length}개 기록으로 바꿀까요?`))return;state.startDate=d.startDate;state.manualWeek=+d.manualWeek;state.records=d.records;state.appTitle=d.appTitle||state.appTitle;state.activeMode=MODE_META[d.activeMode]?d.activeMode:'run';state.lastBackupAt=d.exportedAt||d.lastBackupAt||new Date().toISOString();save();render();toast('백업을 안전하게 불러왔어요')}catch{alert('올바른 백업 파일이 아닙니다.')}finally{e.target.value=''}};
-    document.querySelector('#updateBtn').onclick=async()=>{try{const reg=await navigator.serviceWorker?.getRegistration();await reg?.update();toast('최신 버전을 확인했어요')}catch{toast('인터넷 연결을 확인해주세요')}};
-    document.querySelector('#clearBtn').onclick=()=>{if(confirm('모든 운동 기록과 설정을 삭제할까요?')){localStorage.removeItem(key);location.reload()}};
-    save();render();if('serviceWorker'in navigator){let refreshing=false;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(refreshing)return;refreshing=true;location.reload()});navigator.serviceWorker.register('sw.js').then(reg=>reg.update())}
+    function toast(s){const t=$('#toast');t.textContent=s;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1800)}
+    function renderHeader(){
+      const w=weekData(iso(new Date())),pct=Math.round(w.total/state.weeklyGoal*100)||0;
+      $('#brandTitle').textContent=state.appTitle;document.title=state.appTitle;$('#weekLabel').textContent=`주간 목표 ${state.weeklyGoal}분`;
+      $('#heroTitle').textContent=`${w.total}분 운동`;$('#heroSub').textContent=pct>=100?'이번 주 목표를 달성했어요!':`${state.weeklyGoal-w.total}분 더 하면 목표 달성`;
+      $('#ring').style.setProperty('--progress',Math.min(100,pct)+'%');$('#ringText').textContent=pct+'%';
+    }
+    function renderToday(){
+      const today=iso(new Date()),isToday=selectedDate===today,b=breakdown(selectedDate),total=Object.values(b).reduce((a,c)=>a+c,0);
+      $('#recordDate').value=selectedDate;$('#recordDate').max=today;$('#recordDateTitle').textContent=isToday?'오늘 기록':fmt(selectedDate)+' 기록';$('#dailyTotal').textContent=total;
+      $('#dailyBreakdown').innerHTML=TYPES.map(t=>`<span class="pill ${t}">${TYPE_INFO[t].icon} ${TYPE_INFO[t].name} ${b[t]}분</span>`).join('');
+      const info=TYPE_INFO[selectedType],e=entryFor(selectedDate,selectedType);$('#formTitle').textContent=info.name+' 기록';$('#extraLabel').textContent=info.extra;
+      $('#extra').step=selectedType==='stairs'?'1':'0.01';$('#extra').placeholder=selectedType==='stairs'?'예: 20':'선택 입력';
+      $('#minutes').value=e?.minutes||'';$('#heartRate').value=e?.heartRate||'';$('#extra').value=e?.extra||'';$('#note').value=e?.note||'';effort=e?.effort||3;renderModeFields(e||{});updateDerived();
+      $$('#typeSeg button').forEach(x=>x.classList.toggle('on',x.dataset.type===selectedType));$$('#effort button').forEach(x=>x.classList.toggle('on',+x.dataset.v===effort));
+      $('#saveEntry').textContent=e?'기록 수정':'기록 저장';$('#deleteEntry').style.visibility=e?'visible':'hidden';
+    }
+    function renderModeFields(e){
+      const v=k=>num(e[k])||'';
+      if(selectedType==='run')$('#modeFields').innerHTML=`<div class="grid2"><div class="field"><label for="cadence">평균 케이던스(spm)</label><input id="cadence" inputmode="numeric" type="number" min="0" max="300" value="${v('cadence')}" placeholder="예: 165"></div><div class="field"><label for="elevation">고도상승(m)</label><input id="elevation" inputmode="numeric" type="number" min="0" max="10000" value="${v('elevation')}" placeholder="선택 입력"></div></div>`;
+      if(selectedType==='bike')$('#modeFields').innerHTML=`<div class="grid2"><div class="field"><label for="cadence">평균 케이던스(rpm)</label><input id="cadence" inputmode="numeric" type="number" min="0" max="250" value="${v('cadence')}" placeholder="예: 80"></div><div class="field"><label for="power">평균 파워(W)</label><input id="power" inputmode="numeric" type="number" min="0" max="2500" value="${v('power')}" placeholder="선택 입력"></div><div class="field"><label for="elevation">고도상승(m)</label><input id="elevation" inputmode="numeric" type="number" min="0" max="20000" value="${v('elevation')}" placeholder="선택 입력"></div></div>`;
+      if(selectedType==='stairs')$('#modeFields').innerHTML=`<div class="field"><label for="elevation">고도상승(m)</label><input id="elevation" inputmode="numeric" type="number" min="0" max="10000" value="${v('elevation')}" placeholder="선택 입력"></div>`;
+      $$('#modeFields input').forEach(x=>x.addEventListener('input',updateDerived));
+    }
+    function updateDerived(){
+      const minutes=num($('#minutes').value),extra=num($('#extra').value),out=$('#derivedMetric');
+      if(selectedType==='run'){if(minutes&&extra){const seconds=Math.round(minutes/extra*60),m=Math.floor(seconds/60),s=seconds%60;out.textContent=`평균 페이스 ${m}'${String(s).padStart(2,'0')}\"/km`}else out.textContent='시간과 거리를 입력하면 페이스가 계산됩니다.'}
+      if(selectedType==='bike')out.textContent=minutes&&extra?`평균 속도 ${(extra/(minutes/60)).toFixed(1)}km/h`:'시간과 거리를 입력하면 평균속도가 계산됩니다.';
+      if(selectedType==='stairs')out.textContent=minutes&&extra?`분당 ${(extra/minutes).toFixed(1)}층`:'시간과 층수를 입력하면 분당 층수가 계산됩니다.';
+    }
+    function renderWeek(){
+      const w=weekData(weekAnchor),pct=Math.round(w.total/state.weeklyGoal*100)||0,today=iso(new Date());$('#weekDate').value=weekAnchor;
+      $('#weekTitle').textContent=`이번 주 ${w.total}분`;$('#weekRange').textContent=`${short(w.start)} ~ ${short(w.end)}`;$('#goalText').textContent=state.weeklyGoal+'분';$('#weekProgress').style.setProperty('--progress',Math.min(100,pct)+'%');$('#weekAchievement').textContent=`달성률 ${pct}% · ${pct>=100?'목표 달성!':state.weeklyGoal-w.total+'분 남음'}`;
+      $('#weekRun').textContent=w.values.run;$('#weekStairs').textContent=w.values.stairs;$('#weekBike').textContent=w.values.bike;
+      $('#days').innerHTML=w.dates.map(d=>{const b=breakdown(d),total=Object.values(b).reduce((a,c)=>a+c,0),bits=TYPES.filter(t=>b[t]).map(t=>`${TYPE_INFO[t].name} ${b[t]}분`).join(' · ');return `<div class="day ${d===today?'today':''}" data-date="${d}"><button><div class="dayname">${['월','화','수','목','금','토','일'][w.dates.indexOf(d)]}</div><div><strong>${fmt(d)}</strong><small>${bits||'기록 없음'}</small></div><div class="day-total">${total}분</div></button></div>`}).join('');
+      $$('#days .day').forEach(x=>x.onclick=()=>{selectedDate=x.dataset.date;renderToday();switchView('today')});
+    }
+    function trendWeeks(count){
+      const base=monday(new Date()),arr=[];for(let i=count-1;i>=0;i--){const s=addDays(base,-7*i),start=iso(s),end=iso(addDays(s,6));arr.push({start,end,value:metric==='total'?sumRange(start,end):sumRange(start,end,metric)});}return arr;
+    }
+    function renderTrend(){
+      const count=+$('#trendWeeks').value||8,data=trendWeeks(count),values=data.map(x=>x.value),total=values.reduce((a,b)=>a+b,0),best=Math.max(0,...values),scale=Math.max(best,metric==='total'?state.weeklyGoal:1);
+      $$('#metricSeg button').forEach(x=>x.classList.toggle('on',x.dataset.metric===metric));$('#periodTotal').textContent=Math.round(total);$('#weeklyAverage').textContent=Math.round(total/count);$('#bestWeek').textContent=Math.round(best);
+      $('#trendChart').innerHTML=data.map((x,i)=>`<div class="bar-item"><div class="bar-value">${x.value||''}</div><div class="bar-track"><i class="bar ${metric}" style="--height:${Math.max(x.value?3:0,x.value/scale*100)}%"></i></div><div class="bar-label">${short(x.start)}${i===data.length-1?'<br>이번 주':''}</div></div>`).join('');
+    }
+    function renderRecords(){
+      const rows=Object.keys(state.records).filter(d=>entriesFor(d).length).sort((a,b)=>b.localeCompare(a));
+      $('#records').innerHTML=rows.length?rows.map(d=>{const b=breakdown(d),total=Object.values(b).reduce((a,c)=>a+c,0),details=TYPES.filter(t=>b[t]).map(t=>`${TYPE_INFO[t].icon} ${TYPE_INFO[t].name} ${b[t]}분`).join(' · '),notes=entriesFor(d).map(e=>e.note).filter(Boolean).map(esc).join(' / ');return `<div class="record" data-date="${d}"><div class="record-top"><strong>${fmt(d)}</strong><span class="pill">총 ${total}분</span></div><div class="detail">${details}${notes?'<br>'+notes:''}</div></div>`}).join(''):'<div class="empty">아직 저장된 운동 기록이 없습니다.</div>';
+      $$('#records .record').forEach(x=>x.onclick=()=>{selectedDate=x.dataset.date;renderToday();switchView('today')});
+    }
+    function render(){renderHeader();renderToday();renderWeek();renderTrend();renderRecords();$('#appTitle').value=state.appTitle;$('#weeklyGoal').value=state.weeklyGoal;save()}
+    function switchView(name){$$('.nav button').forEach(x=>x.classList.toggle('on',x.dataset.view===name));$$('.view').forEach(x=>x.classList.remove('active'));$('#'+name+'View').classList.add('active');if(name==='week')renderWeek();if(name==='records'){renderTrend();renderRecords()}window.scrollTo({top:0,behavior:'smooth'})}
+    $('#recordDate').onchange=e=>{selectedDate=e.target.value||iso(new Date());renderToday()};$('#minutes').addEventListener('input',updateDerived);$('#extra').addEventListener('input',updateDerived);
+    $$('#typeSeg button').forEach(b=>b.onclick=()=>{selectedType=b.dataset.type;renderToday()});
+    $$('#effort button').forEach(b=>b.onclick=()=>{effort=+b.dataset.v;$$('#effort button').forEach(x=>x.classList.toggle('on',x===b))});
+    $('#saveEntry').onclick=()=>{
+      const minutes=num($('#minutes').value);if(!minutes){toast('운동 시간을 입력해주세요');return}
+      const entry={type:selectedType,minutes,heartRate:num($('#heartRate').value),extra:num($('#extra').value),cadence:num($('#cadence')?.value),power:num($('#power')?.value),elevation:num($('#elevation')?.value),effort,note:$('#note').value.trim(),savedAt:new Date().toISOString()};
+      const entries=entriesFor(selectedDate).filter(e=>e.type!==selectedType);entries.push(entry);state.records[selectedDate]={entries};save();render();toast(`${fmt(selectedDate)} ${TYPE_INFO[selectedType].name} 저장 완료`);
+    };
+    $('#deleteEntry').onclick=()=>{if(!entryFor(selectedDate,selectedType)||!confirm(`${fmt(selectedDate)} ${TYPE_INFO[selectedType].name} 기록을 삭제할까요?`))return;const entries=entriesFor(selectedDate).filter(e=>e.type!==selectedType);if(entries.length)state.records[selectedDate]={entries};else delete state.records[selectedDate];save();render();toast('기록을 삭제했어요')};
+    $('#weekDate').onchange=e=>{weekAnchor=e.target.value||iso(new Date());renderWeek()};$('#prevWeek').onclick=()=>{weekAnchor=iso(addDays(dateFrom(weekAnchor),-7));renderWeek()};$('#nextWeek').onclick=()=>{weekAnchor=iso(addDays(dateFrom(weekAnchor),7));renderWeek()};
+    $$('#metricSeg button').forEach(b=>b.onclick=()=>{metric=b.dataset.metric;renderTrend()});$('#trendWeeks').onchange=renderTrend;
+    $$('.nav button').forEach(b=>b.onclick=()=>switchView(b.dataset.view));
+    $('#saveSettings').onclick=()=>{state.appTitle=$('#appTitle').value.trim()||'30분 러닝';state.weeklyGoal=Math.max(30,num($('#weeklyGoal').value)||150);save();render();toast('설정을 저장했어요')};
+    $('#exportBtn').onclick=()=>{const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='유산소운동기록-백업-'+iso(new Date())+'.json';a.click();URL.revokeObjectURL(a.href)};
+    $('#importBtn').onclick=()=>$('#importFile').click();$('#importFile').onchange=async e=>{try{const d=JSON.parse(await e.target.files[0].text());if(!d.records)throw 0;state=normalize(d);save();render();toast('백업을 불러왔어요')}catch{alert('올바른 백업 파일이 아닙니다.')}};
+    $('#updateBtn').onclick=async()=>{try{const reg=await navigator.serviceWorker?.getRegistration();await reg?.update();toast('최신 버전을 확인했어요')}catch{toast('인터넷 연결을 확인해주세요')}};
+    $('#clearBtn').onclick=()=>{if(confirm('모든 운동 기록과 설정을 삭제할까요?')){localStorage.removeItem(KEY);location.reload()}};
+    render();if('serviceWorker'in navigator){let refreshing=false;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(refreshing)return;refreshing=true;location.reload()});navigator.serviceWorker.register('sw.js').then(reg=>reg.update())}
   </script>
 </body>
 </html>
