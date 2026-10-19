@@ -24,7 +24,7 @@
     #metricSeg button.on{background:var(--metric);border-color:var(--metric);color:white;box-shadow:0 5px 13px color-mix(in srgb,var(--metric) 28%,transparent);transform:translateY(-1px)}
     .chart{position:relative;scroll-behavior:smooth}
     .bar.total{background:#6958b5}.bar.total.achieved{background:linear-gradient(180deg,#ffb05f,#e66c4a);box-shadow:0 0 0 2px #fff,0 0 0 4px rgba(230,108,74,.22)}
-    .bar-item.achieved .bar-value{color:#d75f3e;font-weight:900}.goal-line{position:absolute;left:0;width:100%;height:0;border-top:2px dashed #6958b5;z-index:3;pointer-events:none}.goal-line span{position:absolute;right:4px;bottom:4px;padding:3px 7px;border-radius:99px;background:#6958b5;color:white;font-size:10px;font-weight:900;white-space:nowrap}
+    .bar-item.achieved .bar-value{color:#d75f3e;font-weight:900}.bar-track.has-goal:after{content:"";position:absolute;left:-6px;right:-6px;bottom:var(--goal);border-top:2px dashed #d85b24;z-index:3;pointer-events:none}.goal-label{position:absolute;right:-2px;bottom:calc(var(--goal) + 5px);z-index:4;padding:3px 7px;border-radius:99px;background:#d85b24;color:white;font-size:10px;font-weight:900;white-space:nowrap;pointer-events:none}
     .nav button{position:relative;margin:6px 4px;border-radius:15px;transition:.2s ease}
     .nav button span{font-size:26px;line-height:25px;margin-bottom:3px;font-weight:900}
     .nav button.on{color:var(--ink);background:linear-gradient(145deg,#e8f6b8,#cfe7dc);box-shadow:0 4px 12px rgba(23,63,53,.16),inset 0 0 0 1px rgba(255,255,255,.7);transform:translateY(-1px);font-weight:900}
@@ -185,8 +185,9 @@
       const count=+$('#trendWeeks').value||8,data=trendWeeks(count),values=data.map(x=>x.value),total=values.reduce((a,b)=>a+b,0),best=Math.max(0,...values),scale=metric==='total'?Math.max(state.weeklyGoal*1.5,best*1.1,1):Math.max(best*1.12,1);
       $$('#metricSeg button').forEach(x=>x.classList.toggle('on',x.dataset.metric===metric));$('#periodTotal').textContent=Math.round(total);$('#weeklyAverage').textContent=Math.round(total/count);$('#bestWeek').textContent=Math.round(best);
       const chart=$('#trendChart');
-      chart.innerHTML=data.map((x,i)=>{const achieved=metric==='total'&&x.value>=state.weeklyGoal;return `<div class="bar-item ${achieved?'achieved':''}"><div class="bar-value">${x.value||''}${achieved?' ✓':''}</div><div class="bar-track"><i class="bar ${metric} ${achieved?'achieved':''}" style="--height:${Math.min(100,Math.max(x.value?3:0,x.value/scale*100))}%"></i></div><div class="bar-label">${short(x.start)}${i===data.length-1?'<br>이번 주':''}</div></div>`}).join('')+(metric==='total'?`<div class="goal-line"><span>목표 ${state.weeklyGoal}분</span></div>`:'');
-      requestAnimationFrame(()=>{const track=chart.querySelector('.bar-track'),line=chart.querySelector('.goal-line');if(track&&line){const cr=chart.getBoundingClientRect(),tr=track.getBoundingClientRect(),ratio=Math.min(1,state.weeklyGoal/scale);line.style.bottom=(cr.bottom-tr.bottom+tr.height*ratio)+'px';line.style.width=Math.max(chart.scrollWidth,chart.clientWidth)+'px'}chart.scrollLeft=chart.scrollWidth});
+      const goalPct=Math.min(100,state.weeklyGoal/scale*100);
+      chart.innerHTML=data.map((x,i)=>{const achieved=metric==='total'&&x.value>=state.weeklyGoal,showGoal=metric==='total';return `<div class="bar-item ${achieved?'achieved':''}"><div class="bar-value">${x.value||''}${achieved?' ✓':''}</div><div class="bar-track ${showGoal?'has-goal':''}" style="--goal:${goalPct}%"><i class="bar ${metric} ${achieved?'achieved':''}" style="--height:${Math.min(100,Math.max(x.value?3:0,x.value/scale*100))}%"></i>${showGoal&&i===data.length-1?`<span class="goal-label">목표 ${state.weeklyGoal}분</span>`:''}</div><div class="bar-label">${short(x.start)}${i===data.length-1?'<br>이번 주':''}</div></div>`}).join('');
+      requestAnimationFrame(()=>{chart.scrollLeft=chart.scrollWidth});
     }
     function renderRecords(){
       const rows=Object.keys(state.records).filter(d=>entriesFor(d).length).sort((a,b)=>b.localeCompare(a));
