@@ -29,6 +29,7 @@
     .nav button span{font-size:26px;line-height:25px;margin-bottom:3px;font-weight:900}
     .nav button.on{color:var(--ink);background:linear-gradient(145deg,#e8f6b8,#cfe7dc);box-shadow:0 4px 12px rgba(23,63,53,.16),inset 0 0 0 1px rgba(255,255,255,.7);transform:translateY(-1px);font-weight:900}
     .nav button.on:before{content:"";position:absolute;top:3px;left:30%;right:30%;height:3px;border-radius:99px;background:var(--ink2)}
+    .top{padding:calc(18px + env(safe-area-inset-top)) 20px 15px}.top>div{position:relative}.header-logo{position:absolute;z-index:2;left:50%;top:-6px;transform:translateX(-50%);width:42px;height:42px;border-radius:11px;margin:0;box-shadow:0 5px 14px rgba(0,0,0,.2)}.brand{gap:56px;min-height:28px}.hero{margin-top:12px}.ring-wrap{min-width:92px}.ring{width:76px;height:76px;background:repeating-conic-gradient(transparent 0 48.4deg,var(--ink) 48.4deg 51.43deg),conic-gradient(var(--lime) var(--progress,0%),#41655c 0)}.ring:after{inset:7px}.ring b{font-size:15px}.day-marker{width:9px;height:9px;transform:translate(-50%,-50%) rotate(var(--day-angle)) translateY(-34px) rotate(calc(-1 * var(--day-angle)))}.today-label{font-size:10px;margin-top:4px}
     @media(max-width:390px){.grid2{grid-template-columns:1fr}.summary b{font-size:18px}.card{padding:16px}.hero h2{font-size:27px}}
     @media(min-width:700px){.nav{left:50%;width:700px;transform:translateX(-50%)}.top>div{max-width:680px;margin:auto}}
   </style>
@@ -148,7 +149,7 @@
       const now=new Date(),w=weekData(iso(now)),pct=Math.round(w.total/state.weeklyGoal*100)||0,day=(now.getDay()+6)%7+1;
       $('#brandTitle').textContent=state.appTitle;document.title=state.appTitle;$('#weekLabel').textContent=`주간 목표 ${state.weeklyGoal}분`;
       $('#heroTitle').textContent=`${w.total}분 운동`;$('#heroSub').textContent=pct>=100?'이번 주 목표를 달성했어요!':`${state.weeklyGoal-w.total}분 더 하면 목표 달성`;
-      $('#ring').style.setProperty('--progress',Math.min(100,pct)+'%');$('#ring').style.setProperty('--day-angle',`${(day-.5)*360/7}deg`);$('#ringText').textContent=pct+'%';
+      $('#ring').style.setProperty('--progress',Math.min(100,pct)+'%');$('#ring').style.setProperty('--day-angle',`${day*360/7}deg`);$('#ringText').textContent=pct+'%';
       $('#todayLabel').textContent=`${now.getMonth()+1}월 ${now.getDate()}일 ${['일','월','화','수','목','금','토'][now.getDay()]}요일 · ${day}/7`;
     }
     function renderToday(){
