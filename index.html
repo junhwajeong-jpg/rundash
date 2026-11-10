@@ -29,6 +29,7 @@
     .nav button span{font-size:26px;line-height:25px;margin-bottom:3px;font-weight:900}
     .nav button.on{color:var(--ink);background:linear-gradient(145deg,#e8f6b8,#cfe7dc);box-shadow:0 4px 12px rgba(23,63,53,.16),inset 0 0 0 1px rgba(255,255,255,.7);transform:translateY(-1px);font-weight:900}
     .nav button.on:before{content:"";position:absolute;top:3px;left:30%;right:30%;height:3px;border-radius:99px;background:var(--ink2)}
+    .coach-card{border-color:#c8ddd4;background:linear-gradient(145deg,#fffdf7,#eef7f2)}.coach-head{display:flex;align-items:center;justify-content:space-between;gap:10px}.coach-badge{display:inline-flex;align-items:center;gap:5px;padding:6px 9px;border-radius:99px;background:var(--ink);color:white;font-size:11px;font-weight:900}.coach-main{margin-top:12px;padding:14px;border-radius:16px;background:white;border:1px solid var(--line)}.coach-main strong{display:block;font-size:18px;margin-bottom:4px}.coach-list{display:grid;gap:8px;margin-top:9px}.coach-tip{padding:10px 12px;border-radius:12px;background:#f0f4f1;font-size:13px;line-height:1.45}.coach-tip.warn{background:#fff0e6;color:#8b431f}.coach-tip.good{background:#eff6d7;color:#536b13}.coach-privacy{margin-top:10px;font-size:11px;color:var(--muted)}
     .top{padding:calc(18px + env(safe-area-inset-top)) 20px 15px}.top>div{position:relative}.header-logo{position:absolute;z-index:2;left:50%;top:-6px;transform:translateX(-50%);width:42px;height:42px;border-radius:11px;margin:0;box-shadow:0 5px 14px rgba(0,0,0,.2)}.brand{gap:56px;min-height:28px}.hero{margin-top:12px}.ring-wrap{min-width:92px}.ring{width:76px;height:76px;background:repeating-conic-gradient(transparent 0 48.4deg,var(--ink) 48.4deg 51.43deg),conic-gradient(var(--lime) var(--progress,0%),#41655c 0)}.ring:after{inset:7px}.ring b{font-size:15px}.day-marker{width:9px;height:9px;transform:translate(-50%,-50%) rotate(var(--day-angle)) translateY(-34px) rotate(calc(-1 * var(--day-angle)))}.today-label{font-size:10px;margin-top:4px}
     @media(max-width:390px){.grid2{grid-template-columns:1fr}.summary b{font-size:18px}.card{padding:16px}.hero h2{font-size:27px}}
     @media(min-width:700px){.nav{left:50%;width:700px;transform:translateX(-50%)}.top>div{max-width:680px;margin:auto}}
@@ -48,6 +49,13 @@
         <div class="daily-total"><span id="dailyTotal">0</span><small style="font-size:15px">분</small></div>
         <div class="detail">선택한 날짜의 유산소 운동 합계</div>
         <div class="breakdown" id="dailyBreakdown"></div>
+      </article>
+
+      <article class="card coach-card">
+        <div class="coach-head"><div><div class="eyebrow">LOCAL COACH</div><h3 style="margin-bottom:0">오늘의 코치</h3></div><span class="coach-badge">🔒 내 폰에서 분석</span></div>
+        <div class="coach-main"><strong id="coachTitle">기록을 기다리고 있어요</strong><div class="detail" id="coachBody">운동 기록에 맞춰 바로 피드백해드릴게요.</div></div>
+        <div class="coach-list" id="coachList"></div>
+        <div class="coach-privacy">기록은 외부로 전송되지 않으며 이 기기에서만 판단합니다.</div>
       </article>
 
       <article class="card">
@@ -97,8 +105,14 @@
         <div class="field"><label for="weeklyGoal">주간 유산소 목표(분)</label><input type="number" id="weeklyGoal" min="30" max="1000" step="10"></div>
         <button class="btn" id="saveSettings" style="width:100%">설정 저장</button>
       </article>
+      <article class="card">
+        <div class="eyebrow">로컬 코치</div><h3>피드백과 알림</h3>
+        <div class="grid2"><div class="field"><label for="coachEnabled">코치 기능</label><select id="coachEnabled"><option value="on">사용</option><option value="off">사용 안 함</option></select></div><div class="field"><label for="coachTime">알림 확인 시간</label><input type="time" id="coachTime" value="20:00"></div></div>
+        <p class="detail">앱을 열면 기록을 자동 분석합니다. 지원 기기에서는 허용한 시간 이후 앱 사용 중 알림도 표시합니다.</p>
+        <button class="btn alt" id="notificationBtn" style="width:100%">기기 알림 허용</button>
+      </article>
       <article class="card"><div class="eyebrow">백업</div><h3>기록 내보내기</h3><p class="detail">운동 기록은 이 휴대폰에만 저장됩니다. 앱을 삭제하거나 브라우저 데이터를 지우기 전에 백업하세요.</p><div class="actions"><button class="btn alt" id="exportBtn">백업 파일</button><button class="btn ghost" id="importBtn">백업 불러오기</button></div><input id="importFile" type="file" accept="application/json" hidden></article>
-      <article class="card"><div class="eyebrow">앱 정보</div><p class="privacy">외부 계정, 광고, 분석 도구를 사용하지 않습니다. 모든 기록은 이 앱의 로컬 저장공간에만 보관됩니다. · ver 3.0</p><button class="btn ghost" id="updateBtn" style="width:100%;margin:8px 0 10px">최신 버전 확인</button><button class="btn danger" id="clearBtn" style="width:100%">모든 기록 삭제</button></article>
+      <article class="card"><div class="eyebrow">앱 정보</div><p class="privacy">외부 계정, 광고, 분석 도구를 사용하지 않습니다. 모든 기록은 이 앱의 로컬 저장공간에만 보관됩니다. · ver 3.1</p><button class="btn ghost" id="updateBtn" style="width:100%;margin:8px 0 10px">최신 버전 확인</button><button class="btn danger" id="clearBtn" style="width:100%">모든 기록 삭제</button></article>
     </section>
   </main>
 
@@ -118,7 +132,7 @@
     const esc=s=>String(s||'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
     function normalize(source){
       const src=source&&typeof source==='object'?source:{};
-      const out={...src,appTitle:src.appTitle||'30분 러닝',weeklyGoal:num(src.weeklyGoal)||150,records:{}};
+      const out={...src,appTitle:src.appTitle||'30분 러닝',weeklyGoal:num(src.weeklyGoal)||150,coachEnabled:src.coachEnabled!==false,coachTime:src.coachTime||'20:00',records:{}};
       Object.entries(src.records||{}).forEach(([date,r])=>{
         if(!r||typeof r!=='object')return;
         if(Array.isArray(r.entries)){
@@ -145,6 +159,32 @@
       return {start:dates[0],end,dates,values,total:Object.values(values).reduce((a,b)=>a+b,0)};
     }
     function toast(s){const t=$('#toast');t.textContent=s;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1800)}
+    function previousWeek(anchor){const start=monday(dateFrom(anchor));return weekData(iso(addDays(start,-7)))}
+    function coachAdvice(){
+      const today=iso(new Date()),now=dateFrom(today),w=weekData(today),prev=previousWeek(today),dow=now.getDay(),todayMinutes=dayValue(today),messages=[];
+      const allEntries=Object.entries(state.records).flatMap(([date,r])=>(r.entries||[]).map(e=>({...e,date}))).sort((a,b)=>String(a.savedAt||a.date).localeCompare(String(b.savedAt||b.date)));
+      const lastTwo=allEntries.slice(-2),highTwice=lastTwo.length===2&&lastTwo.every(e=>num(e.effort)>=4);
+      if(todayMinutes>=30)messages.push({kind:'good',title:'오늘 30분 달성! 🎉',body:`오늘 ${todayMinutes}분을 채웠어요. 충분히 잘했습니다.`});
+      if(highTwice)messages.push({kind:'warn',title:'강한 운동이 2회 연속이에요',body:'다음 운동은 회복 걷기나 가벼운 강도로 바꿔주세요.'});
+      if(prev.total>0&&w.total>=prev.total*1.15)messages.push({kind:'warn',title:'운동량 증가 폭을 확인하세요',body:`지난주 ${prev.total}분보다 15% 이상 늘었어요. 통증이나 과도한 피로가 있으면 쉬어가세요.`});
+      if((dow===5||dow===6)&&w.total<75)messages.push({kind:'warn',title:'주말에 30분을 확보해보세요',body:`현재 ${w.total}분이에요. 무리해서 몰아 하지 말고 주말 하루 30분만 편하게 움직여보세요.`});
+      const y1=iso(addDays(now,-1)),y2=iso(addDays(now,-2));
+      if(!todayMinutes&&!dayValue(y1)&&!dayValue(y2))messages.push({kind:'normal',title:'오늘은 10분만 시작해볼까요?',body:'이틀간 기록이 없어요. 빠진 운동을 보충하지 말고 가볍게 10분만 움직여도 충분합니다.'});
+      if(dow===0){const rec=w.total?Math.min(state.weeklyGoal,Math.max(30,Math.round(w.total*1.1/5)*5)):30;messages.push({kind:w.total>=state.weeklyGoal?'good':'normal',title:'이번 주 마무리 리포트',body:`총 ${w.total}분 · 달리기 ${w.values.run}분 · 계단 ${w.values.stairs}분 · 자전거 ${w.values.bike}분 · 달성률 ${Math.round(w.total/state.weeklyGoal*100)||0}%. 다음 주는 최대 ${rec}분을 권장해요.`});}
+      if(!messages.length){const left=Math.max(0,state.weeklyGoal-w.total);messages.push({kind:'normal',title:'좋은 흐름이에요',body:left?`이번 주 ${w.total}분 기록했어요. 목표까지 ${left}분 남았습니다.`:'이번 주 목표를 달성했어요. 더 늘리기보다 회복도 챙겨주세요.'});}
+      return messages;
+    }
+    async function maybeCoachNotice(message){
+      if(!state.coachEnabled||!message||!('Notification'in window)||Notification.permission!=='granted')return;
+      const now=new Date(),today=iso(now),time=(state.coachTime||'20:00').split(':').map(Number),after=now.getHours()>time[0]||(now.getHours()===time[0]&&now.getMinutes()>=time[1]);if(!after)return;
+      const noticeKey=`${today}|${message.title}`,stored=localStorage.getItem('running30-coach-notice');if(stored===noticeKey)return;
+      try{const reg=await navigator.serviceWorker?.getRegistration();if(reg)await reg.showNotification(message.title,{body:message.body,icon:'juns-run-signature-v9-192.png',tag:'juns-run-coach'});else new Notification(message.title,{body:message.body,icon:'juns-run-signature-v9-192.png'});localStorage.setItem('running30-coach-notice',noticeKey)}catch{}
+    }
+    function renderCoach(){
+      const messages=coachAdvice(),primary=messages[0];$('#coachTitle').textContent=primary.title;$('#coachBody').textContent=primary.body;
+      $('#coachList').innerHTML=messages.slice(1,4).map(m=>`<div class="coach-tip ${m.kind}"><b>${esc(m.title)}</b><br>${esc(m.body)}</div>`).join('');
+      maybeCoachNotice(primary);
+    }
     function renderHeader(){
       const now=new Date(),w=weekData(iso(now)),pct=Math.round(w.total/state.weeklyGoal*100)||0,day=(now.getDay()+6)%7+1;
       $('#brandTitle').textContent=state.appTitle;document.title=state.appTitle;$('#weekLabel').textContent=`주간 목표 ${state.weeklyGoal}분`;
@@ -210,7 +250,7 @@
       $('#records').innerHTML=rows.length?rows.map(d=>{const b=breakdown(d),total=Object.values(b).reduce((a,c)=>a+c,0),details=TYPES.filter(t=>b[t]).map(t=>`${TYPE_INFO[t].icon} ${TYPE_INFO[t].name} ${b[t]}분`).join(' · '),notes=entriesFor(d).map(e=>e.note).filter(Boolean).map(esc).join(' / ');return `<div class="record" data-date="${d}"><div class="record-top"><strong>${fmt(d)}</strong><span class="pill">총 ${total}분</span></div><div class="detail">${details}${notes?'<br>'+notes:''}</div></div>`}).join(''):'<div class="empty">아직 저장된 운동 기록이 없습니다.</div>';
       $$('#records .record').forEach(x=>x.onclick=()=>{selectedDate=x.dataset.date;renderToday();switchView('today')});
     }
-    function render(){renderHeader();renderToday();renderWeek();renderTrend();renderRecords();$('#appTitle').value=state.appTitle;$('#weeklyGoal').value=state.weeklyGoal;save()}
+    function render(){renderHeader();renderToday();renderCoach();renderWeek();renderTrend();renderRecords();$('#appTitle').value=state.appTitle;$('#weeklyGoal').value=state.weeklyGoal;$('#coachEnabled').value=state.coachEnabled?'on':'off';$('#coachTime').value=state.coachTime||'20:00';save()}
     function switchView(name){activeView=name;$$('.nav button').forEach(x=>x.classList.toggle('on',x.dataset.view===name));$$('.view').forEach(x=>x.classList.remove('active'));$('#'+name+'View').classList.add('active');if(name==='week')renderWeek();if(name==='records'){renderTrend();renderRecords()}window.scrollTo({top:0,behavior:'smooth'})}
     $('#recordDate').onchange=e=>{selectedDate=e.target.value||iso(new Date());editingId=null;renderToday()};$('#minutes').addEventListener('input',updateDerived);$('#extra').addEventListener('input',updateDerived);
     $$('#typeSeg button').forEach(b=>b.onclick=()=>{selectedType=b.dataset.type;editingId=null;renderToday()});
@@ -219,14 +259,16 @@
       const minutes=num($('#minutes').value);if(!minutes){toast('운동 시간을 입력해주세요');return}
       const old=editingId?entryFor(selectedDate,editingId):null;
       const entry={id:old?.id||`${Date.now()}-${Math.random().toString(36).slice(2,7)}`,type:selectedType,minutes,heartRate:num($('#heartRate').value),extra:num($('#extra').value),cadence:num($('#cadence')?.value),power:num($('#power')?.value),elevation:num($('#elevation')?.value),effort,note:$('#note').value.trim(),savedAt:old?.savedAt||new Date().toISOString()};
-      const entries=old?entriesFor(selectedDate).map(e=>e.id===old.id?entry:e):[...entriesFor(selectedDate),entry];state.records[selectedDate]={entries};save();const wasEdit=!!old;resetForm();render();toast(`${TYPE_INFO[selectedType].name} ${minutes}분 ${wasEdit?'수정':'추가'} 완료`);
+      const entries=old?entriesFor(selectedDate).map(e=>e.id===old.id?entry:e):[...entriesFor(selectedDate),entry];state.records[selectedDate]={entries};save();const wasEdit=!!old;resetForm();render();const reached=selectedDate===iso(new Date())&&dayValue(selectedDate)>=30;toast(reached?'오늘 30분 달성! 🎉':`${TYPE_INFO[selectedType].name} ${minutes}분 ${wasEdit?'수정':'추가'} 완료`);
     };
     $('#deleteEntry').onclick=()=>editingId&&deleteById(editingId);
     $('#weekDate').onchange=e=>{weekAnchor=e.target.value||iso(new Date());renderWeek()};$('#prevWeek').onclick=()=>{weekAnchor=iso(addDays(dateFrom(weekAnchor),-7));renderWeek()};$('#nextWeek').onclick=()=>{weekAnchor=iso(addDays(dateFrom(weekAnchor),7));renderWeek()};
     $$('#metricSeg button').forEach(b=>b.onclick=()=>{metric=b.dataset.metric;renderTrend()});$('#trendWeeks').onchange=renderTrend;
     $$('.nav button').forEach(b=>b.onclick=()=>switchView(b.dataset.view));
     let touchStart=null;$('.wrap').addEventListener('touchstart',e=>{if(e.touches.length!==1||e.target.closest('input,textarea,select,button,.chart')){touchStart=null;return}touchStart={x:e.touches[0].clientX,y:e.touches[0].clientY}},{passive:true});$('.wrap').addEventListener('touchend',e=>{if(!touchStart)return;const dx=e.changedTouches[0].clientX-touchStart.x,dy=e.changedTouches[0].clientY-touchStart.y;touchStart=null;if(Math.abs(dx)<55||Math.abs(dx)<Math.abs(dy)*1.25)return;const views=['today','week','records','settings'],i=views.indexOf(activeView),next=dx<0?i+1:i-1;if(next>=0&&next<views.length)switchView(views[next])},{passive:true});
-    $('#saveSettings').onclick=()=>{state.appTitle=$('#appTitle').value.trim()||'30분 러닝';state.weeklyGoal=Math.max(30,num($('#weeklyGoal').value)||150);save();render();toast('설정을 저장했어요')};
+    $('#saveSettings').onclick=()=>{state.appTitle=$('#appTitle').value.trim()||'30분 러닝';state.weeklyGoal=Math.max(30,num($('#weeklyGoal').value)||150);state.coachEnabled=$('#coachEnabled').value!=='off';state.coachTime=$('#coachTime').value||'20:00';save();render();toast('설정을 저장했어요')};
+    $('#coachEnabled').onchange=()=>{state.coachEnabled=$('#coachEnabled').value!=='off';save();renderCoach()};$('#coachTime').onchange=()=>{state.coachTime=$('#coachTime').value||'20:00';save()};
+    $('#notificationBtn').onclick=async()=>{if(!('Notification'in window)){toast('이 기기에서는 알림을 지원하지 않아요');return}try{const p=await Notification.requestPermission();if(p==='granted'){localStorage.removeItem('running30-coach-notice');renderCoach();toast('코치 알림을 허용했어요')}else toast('알림이 허용되지 않았어요')}catch{toast('기기 설정에서 알림을 확인해주세요')}};
     $('#exportBtn').onclick=()=>{const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='유산소운동기록-백업-'+iso(new Date())+'.json';a.click();URL.revokeObjectURL(a.href)};
     $('#importBtn').onclick=()=>$('#importFile').click();$('#importFile').onchange=async e=>{try{const d=JSON.parse(await e.target.files[0].text());if(!d.records)throw 0;state=normalize(d);save();render();toast('백업을 불러왔어요')}catch{alert('올바른 백업 파일이 아닙니다.')}};
     $('#updateBtn').onclick=async()=>{try{const reg=await navigator.serviceWorker?.getRegistration();await reg?.update();toast('최신 버전을 확인했어요')}catch{toast('인터넷 연결을 확인해주세요')}};
