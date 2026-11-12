@@ -160,18 +160,29 @@
     }
     function toast(s){const t=$('#toast');t.textContent=s;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1800)}
     function previousWeek(anchor){const start=monday(dateFrom(anchor));return weekData(iso(addDays(start,-7)))}
+    function remainingPlan(total,goal,dayIndex){
+      const left=Math.max(0,goal-total),count=8-dayIndex,names=['월','화','수','목','금','토','일'].slice(dayIndex-1),plan=Array(count).fill(Math.floor(left/count/5)*5);let extra=left-plan.reduce((a,b)=>a+b,0);
+      for(let i=count-1;i>=0&&extra>0;i--){const add=Math.min(5,extra);plan[i]+=add;extra-=add}
+      return {left,count,average:Math.ceil(left/count/5)*5,text:plan.map((v,i)=>`${i===0?'오늘('+names[i]+')':names[i]} ${v}분`).join(' · '),tooMuch:Math.max(...plan)>45};
+    }
     function coachAdvice(){
-      const today=iso(new Date()),now=dateFrom(today),w=weekData(today),prev=previousWeek(today),dow=now.getDay(),todayMinutes=dayValue(today),messages=[];
+      const today=iso(new Date()),now=dateFrom(today),w=weekData(today),prev=previousWeek(today),dow=now.getDay(),dayIndex=(dow+6)%7+1,todayMinutes=dayValue(today),messages=[];
       const allEntries=Object.entries(state.records).flatMap(([date,r])=>(r.entries||[]).map(e=>({...e,date}))).sort((a,b)=>String(a.savedAt||a.date).localeCompare(String(b.savedAt||b.date)));
-      const lastTwo=allEntries.slice(-2),highTwice=lastTwo.length===2&&lastTwo.every(e=>num(e.effort)>=4);
+      const lastTwo=allEntries.slice(-2),highTwice=lastTwo.length===2&&lastTwo.every(e=>num(e.effort)>=4),expected=Math.round(state.weeklyGoal*dayIndex/7),pace=expected?w.total/expected:1,plan=remainingPlan(w.total,state.weeklyGoal,dayIndex),dayName=['일','월','화','수','목','금','토'][dow];
       if(todayMinutes>=30)messages.push({kind:'good',title:'오늘 30분 달성! 🎉',body:`오늘 ${todayMinutes}분을 채웠어요. 충분히 잘했습니다.`});
+      if(w.total<state.weeklyGoal&&dayIndex>1&&pace<.9){
+        const title=pace<.6?`${dayName}요일 기준, 많이 분발해야 해요`:`${dayName}요일 기준, 조금 더 분발이 필요해요`;
+        messages.push({kind:'warn',title,body:`현재 ${w.total}분입니다. 오늘까지 권장 누적 ${expected}분보다 ${Math.max(0,expected-w.total)}분 부족해요.`});
+        messages.push({kind:plan.tooMuch?'warn':'normal',title:plan.tooMuch?'무리해서 150분을 채우지는 마세요':'남은 요일 실행 계획',body:plan.tooMuch?`남은 ${plan.count}일 동안 하루 최대 45분까지만 하고, 부족분은 다음 주로 넘기세요.`:`${plan.text}. 하루 평균 ${plan.average}분이면 150분 달성이 가능합니다.`});
+      }else if(w.total<state.weeklyGoal&&dayIndex===1){messages.push({kind:'normal',title:'이번 주를 가볍게 시작해볼까요?',body:`오늘 30분부터 시작하면 주간 ${state.weeklyGoal}분 목표를 여유 있게 만들 수 있어요.`});}
+      else if(w.total<state.weeklyGoal&&pace>=.9){messages.push({kind:'good',title:'현재 요일 기준 좋은 흐름이에요',body:`${dayName}요일 권장 누적 ${expected}분, 현재 ${w.total}분입니다. ${plan.text}.`});}
       if(highTwice)messages.push({kind:'warn',title:'강한 운동이 2회 연속이에요',body:'다음 운동은 회복 걷기나 가벼운 강도로 바꿔주세요.'});
       if(prev.total>0&&w.total>=prev.total*1.15)messages.push({kind:'warn',title:'운동량 증가 폭을 확인하세요',body:`지난주 ${prev.total}분보다 15% 이상 늘었어요. 통증이나 과도한 피로가 있으면 쉬어가세요.`});
       if((dow===5||dow===6)&&w.total<75)messages.push({kind:'warn',title:'주말에 30분을 확보해보세요',body:`현재 ${w.total}분이에요. 무리해서 몰아 하지 말고 주말 하루 30분만 편하게 움직여보세요.`});
       const y1=iso(addDays(now,-1)),y2=iso(addDays(now,-2));
       if(!todayMinutes&&!dayValue(y1)&&!dayValue(y2))messages.push({kind:'normal',title:'오늘은 10분만 시작해볼까요?',body:'이틀간 기록이 없어요. 빠진 운동을 보충하지 말고 가볍게 10분만 움직여도 충분합니다.'});
       if(dow===0){const rec=w.total?Math.min(state.weeklyGoal,Math.max(30,Math.round(w.total*1.1/5)*5)):30;messages.push({kind:w.total>=state.weeklyGoal?'good':'normal',title:'이번 주 마무리 리포트',body:`총 ${w.total}분 · 달리기 ${w.values.run}분 · 계단 ${w.values.stairs}분 · 자전거 ${w.values.bike}분 · 달성률 ${Math.round(w.total/state.weeklyGoal*100)||0}%. 다음 주는 최대 ${rec}분을 권장해요.`});}
-      if(!messages.length){const left=Math.max(0,state.weeklyGoal-w.total);messages.push({kind:'normal',title:'좋은 흐름이에요',body:left?`이번 주 ${w.total}분 기록했어요. 목표까지 ${left}분 남았습니다.`:'이번 주 목표를 달성했어요. 더 늘리기보다 회복도 챙겨주세요.'});}
+      if(!messages.length){messages.push({kind:'good',title:'이번 주 목표를 달성했어요! 🎉',body:`현재 ${w.total}분입니다. 더 늘리기보다 회복도 챙겨주세요.`});}
       return messages;
     }
     async function maybeCoachNotice(message){
@@ -277,3 +288,4 @@
   </script>
 </body>
 </html>
+
