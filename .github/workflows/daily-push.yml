@@ -1,0 +1,77 @@
+name: Jun's Run daily push
+
+on:
+  schedule:
+    # Korea time: 09:00, 15:00, 20:00 (UTC: 00:00, 06:00, 11:00)
+    - cron: '0 0 * * *'
+    - cron: '0 6 * * *'
+    - cron: '0 11 * * *'
+  workflow_dispatch:
+    inputs:
+      period:
+        description: 'Message to test'
+        required: true
+        default: evening
+        type: choice
+        options:
+          - morning
+          - afternoon
+          - evening
+
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Choose coaching message
+        id: message
+        shell: bash
+        run: |
+          PERIOD="${{ inputs.period }}"
+          if [ -z "$PERIOD" ]; then
+            case "${{ github.event.schedule }}" in
+              "0 0 * * *") PERIOD="morning" ;;
+              "0 6 * * *") PERIOD="afternoon" ;;
+              *) PERIOD="evening" ;;
+            esac
+          fi
+          case "$PERIOD" in
+            morning)
+              echo "title=Jun's Run · 아침 체크" >> "$GITHUB_OUTPUT"
+              echo "body=오늘 운동 계획을 확인해보세요. 10분부터 시작해도 충분해요." >> "$GITHUB_OUTPUT"
+              ;;
+            afternoon)
+              echo "title=Jun's Run · 오후 코치" >> "$GITHUB_OUTPUT"
+              echo "body=이번 주 진행률을 확인하고 오늘 움직일 시간을 정해보세요." >> "$GITHUB_OUTPUT"
+              ;;
+            *)
+              echo "title=Jun's Run · 저녁 기록" >> "$GITHUB_OUTPUT"
+              echo "body=오늘 운동을 기록하고 내 폰의 맞춤 코칭을 확인하세요." >> "$GITHUB_OUTPUT"
+              ;;
+          esac
+
+      - name: Send OneSignal notification
+        env:
+          ONESIGNAL_REST_API_KEY: ${{ secrets.ONESIGNAL_REST_API_KEY }}
+          TITLE: ${{ steps.message.outputs.title }}
+          BODY: ${{ steps.message.outputs.body }}
+        shell: bash
+        run: |
+          test -n "$ONESIGNAL_REST_API_KEY"
+          jq -n \
+            --arg app_id "f74757cd-7eca-41ee-97b1-03779597db71" \
+            --arg title "$TITLE" \
+            --arg body "$BODY" \
+            --arg url "https://junhwajeong-jpg.github.io/rundash/" \
+            '{
+              app_id: $app_id,
+              included_segments: ["Subscribed Users"],
+              headings: {ko: $title, en: $title},
+              contents: {ko: $body, en: $body},
+              url: $url
+            }' > payload.json
+          curl --fail-with-body --silent --show-error \
+            --request POST \
+            --url "https://api.onesignal.com/notifications" \
+            --header "Authorization: Key $ONESIGNAL_REST_API_KEY" \
+            --header "Content-Type: application/json" \
+            --data @payload.json
