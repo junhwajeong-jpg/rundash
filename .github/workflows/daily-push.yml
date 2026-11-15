@@ -1,4 +1,4 @@
-# Manual verification trigger: 2026-11-15 KST
+# Delivery verification enabled
 name: Jun's Run daily push
 
 on:
@@ -55,7 +55,7 @@ jobs:
               ;;
           esac
 
-      - name: Send OneSignal notification
+      - name: Send and verify OneSignal notification
         env:
           ONESIGNAL_REST_API_KEY: ${{ secrets.ONESIGNAL_REST_API_KEY }}
           TITLE: ${{ steps.message.outputs.title }}
@@ -75,9 +75,17 @@ jobs:
               contents: {ko: $body, en: $body},
               url: $url
             }' > payload.json
-          curl --fail-with-body --silent --show-error \
+          RESPONSE=$(curl --fail-with-body --silent --show-error \
             --request POST \
             --url "https://api.onesignal.com/notifications" \
             --header "Authorization: Key $ONESIGNAL_REST_API_KEY" \
             --header "Content-Type: application/json" \
-            --data @payload.json
+            --data @payload.json)
+          echo "$RESPONSE"
+          ID=$(echo "$RESPONSE" | jq -r '.id // empty')
+          RECIPIENTS=$(echo "$RESPONSE" | jq -r '.recipients // 0')
+          test -n "$ID"
+          if [ "$RECIPIENTS" -lt 1 ]; then
+            echo "OneSignal accepted the request but found zero subscribed recipients."
+            exit 22
+          fi
