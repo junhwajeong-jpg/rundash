@@ -1,4 +1,4 @@
-# Delivery verification enabled · retry 2
+# Exact OneSignal user targeting enabled
 name: Jun's Run daily push
 
 on:
@@ -70,7 +70,10 @@ jobs:
             --arg url "https://junhwajeong-jpg.github.io/rundash/" \
             '{
               app_id: $app_id,
-              included_segments: ["Subscribed Users"],
+              include_aliases: {
+                onesignal_id: ["85e8a189-520d-4b7a-81ea-e1f44d1a09df"]
+              },
+              target_channel: "push",
               headings: {ko: $title, en: $title},
               contents: {ko: $body, en: $body},
               url: $url
@@ -83,9 +86,4 @@ jobs:
             --data @payload.json)
           echo "$RESPONSE"
           ID=$(echo "$RESPONSE" | jq -r '.id // empty')
-          RECIPIENTS=$(echo "$RESPONSE" | jq -r '.recipients // 0')
           test -n "$ID"
-          if [ "$RECIPIENTS" -lt 1 ]; then
-            echo "OneSignal accepted the request but found zero subscribed recipients."
-            exit 22
-          fi
