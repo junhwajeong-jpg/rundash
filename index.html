@@ -19,7 +19,7 @@
         appId:'f74757cd-7eca-41ee-97b1-03779597db71',
         safari_web_id:'web.onesignal.auto.5f0d689b-f65a-4365-8770-a9853d53b981',
         notifyButton:{enable:false},
-        serviceWorkerPath:'OneSignalSDKWorker.js',
+        serviceWorkerPath:'/rundash/OneSignalSDKWorker.js',
         serviceWorkerParam:{scope:'/rundash/'}
       });
       if(OneSignal.Notifications.permission&&!OneSignal.User.PushSubscription.optedIn){
@@ -299,13 +299,18 @@
       if(!('Notification'in window)){toast('이 기기에서는 알림을 지원하지 않아요');return}
       try{
         if(window.OneSignalDeferred){
+          let handled=false;
           OneSignalDeferred.push(async OneSignal=>{
-            await OneSignal.Notifications.requestPermission();
-            if(OneSignal.Notifications.permission){
-              await OneSignal.User.PushSubscription.optIn();
-              localStorage.removeItem('running30-coach-notice');renderCoach();toast('푸시 알림 구독이 완료됐어요');
-            }else toast('알림이 허용되지 않았어요');
+            handled=true;
+            try{
+              await OneSignal.Notifications.requestPermission();
+              if(OneSignal.Notifications.permission){
+                await OneSignal.User.PushSubscription.optIn();
+                localStorage.removeItem('running30-coach-notice');renderCoach();toast('푸시 알림 구독이 완료됐어요');
+              }else toast('알림이 허용되지 않았어요');
+            }catch{toast('푸시 연결에 실패했어요. 앱을 다시 열어주세요')}
           });
+          setTimeout(()=>{if(!handled)toast('푸시 기능을 불러오지 못했어요')},4000);
         }else{
           const p=await Notification.requestPermission();
           if(p==='granted'){localStorage.removeItem('running30-coach-notice');renderCoach();toast('코치 알림을 허용했어요')}else toast('알림이 허용되지 않았어요');
@@ -316,7 +321,7 @@
     $('#importBtn').onclick=()=>$('#importFile').click();$('#importFile').onchange=async e=>{try{const d=JSON.parse(await e.target.files[0].text());if(!d.records)throw 0;state=normalize(d);save();render();toast('백업을 불러왔어요')}catch{alert('올바른 백업 파일이 아닙니다.')}};
     $('#updateBtn').onclick=async()=>{try{const reg=await navigator.serviceWorker?.getRegistration();await reg?.update();toast('최신 버전을 확인했어요')}catch{toast('인터넷 연결을 확인해주세요')}};
     $('#clearBtn').onclick=()=>{if(confirm('모든 운동 기록과 설정을 삭제할까요?')){localStorage.removeItem(KEY);location.reload()}};
-    render();if('serviceWorker'in navigator){let refreshing=false;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(refreshing)return;refreshing=true;location.reload()});navigator.serviceWorker.register('OneSignalSDKWorker.js',{scope:'/rundash/'}).then(reg=>reg.update())}
+    render();if('serviceWorker'in navigator){let refreshing=false;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(refreshing)return;refreshing=true;location.reload()});navigator.serviceWorker.register('/rundash/OneSignalSDKWorker.js',{scope:'/rundash/'}).then(reg=>reg.update())}
   </script>
 </body>
 </html>
