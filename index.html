@@ -11,6 +11,19 @@
   <link rel="icon" type="image/png" sizes="192x192" href="juns-run-signature-v9-192.png">
   <link rel="apple-touch-icon" sizes="180x180" href="juns-run-signature-v9-apple.png">
   <title>30분 러닝</title>
+  <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+  <script>
+    window.OneSignalDeferred=window.OneSignalDeferred||[];
+    OneSignalDeferred.push(async function(OneSignal){
+      await OneSignal.init({
+        appId:'f74757cd-7eca-41ee-97b1-03779597db71',
+        safari_web_id:'web.onesignal.auto.5f0d689b-f65a-4365-8770-a9853d53b981',
+        notifyButton:{enable:false},
+        serviceWorkerPath:'OneSignalSDKWorker.js',
+        serviceWorkerParam:{scope:'/rundash/'}
+      });
+    });
+  </script>
   <style>
     :root{--ink:#173f35;--ink2:#28594c;--muted:#6f7e78;--cream:#f5f2e9;--paper:#fffdf7;--mint:#cfe7dc;--lime:#d9ee91;--orange:#ff9b61;--line:#dce3de;--danger:#a74336;--blue:#8cc7db}
     *{box-sizing:border-box}html{background:var(--ink)}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;color:var(--ink);background:var(--cream);min-height:100vh;padding-bottom:calc(84px + env(safe-area-inset-bottom))}
@@ -279,12 +292,25 @@
     let touchStart=null;$('.wrap').addEventListener('touchstart',e=>{if(e.touches.length!==1||e.target.closest('input,textarea,select,button,.chart')){touchStart=null;return}touchStart={x:e.touches[0].clientX,y:e.touches[0].clientY}},{passive:true});$('.wrap').addEventListener('touchend',e=>{if(!touchStart)return;const dx=e.changedTouches[0].clientX-touchStart.x,dy=e.changedTouches[0].clientY-touchStart.y;touchStart=null;if(Math.abs(dx)<55||Math.abs(dx)<Math.abs(dy)*1.25)return;const views=['today','week','records','settings'],i=views.indexOf(activeView),next=dx<0?i+1:i-1;if(next>=0&&next<views.length)switchView(views[next])},{passive:true});
     $('#saveSettings').onclick=()=>{state.appTitle=$('#appTitle').value.trim()||'30분 러닝';state.weeklyGoal=Math.max(30,num($('#weeklyGoal').value)||150);state.coachEnabled=$('#coachEnabled').value!=='off';state.coachTime=$('#coachTime').value||'20:00';save();render();toast('설정을 저장했어요')};
     $('#coachEnabled').onchange=()=>{state.coachEnabled=$('#coachEnabled').value!=='off';save();renderCoach()};$('#coachTime').onchange=()=>{state.coachTime=$('#coachTime').value||'20:00';save()};
-    $('#notificationBtn').onclick=async()=>{if(!('Notification'in window)){toast('이 기기에서는 알림을 지원하지 않아요');return}try{const p=await Notification.requestPermission();if(p==='granted'){localStorage.removeItem('running30-coach-notice');renderCoach();toast('코치 알림을 허용했어요')}else toast('알림이 허용되지 않았어요')}catch{toast('기기 설정에서 알림을 확인해주세요')}};
+    $('#notificationBtn').onclick=async()=>{
+      if(!('Notification'in window)){toast('이 기기에서는 알림을 지원하지 않아요');return}
+      try{
+        if(window.OneSignalDeferred){
+          OneSignalDeferred.push(async OneSignal=>{
+            await OneSignal.Notifications.requestPermission();
+            if(OneSignal.Notifications.permission){localStorage.removeItem('running30-coach-notice');renderCoach();toast('푸시 알림을 허용했어요')}else toast('알림이 허용되지 않았어요');
+          });
+        }else{
+          const p=await Notification.requestPermission();
+          if(p==='granted'){localStorage.removeItem('running30-coach-notice');renderCoach();toast('코치 알림을 허용했어요')}else toast('알림이 허용되지 않았어요');
+        }
+      }catch{toast('기기 설정에서 알림을 확인해주세요')}
+    };
     $('#exportBtn').onclick=()=>{const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='유산소운동기록-백업-'+iso(new Date())+'.json';a.click();URL.revokeObjectURL(a.href)};
     $('#importBtn').onclick=()=>$('#importFile').click();$('#importFile').onchange=async e=>{try{const d=JSON.parse(await e.target.files[0].text());if(!d.records)throw 0;state=normalize(d);save();render();toast('백업을 불러왔어요')}catch{alert('올바른 백업 파일이 아닙니다.')}};
     $('#updateBtn').onclick=async()=>{try{const reg=await navigator.serviceWorker?.getRegistration();await reg?.update();toast('최신 버전을 확인했어요')}catch{toast('인터넷 연결을 확인해주세요')}};
     $('#clearBtn').onclick=()=>{if(confirm('모든 운동 기록과 설정을 삭제할까요?')){localStorage.removeItem(KEY);location.reload()}};
-    render();if('serviceWorker'in navigator){let refreshing=false;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(refreshing)return;refreshing=true;location.reload()});navigator.serviceWorker.register('sw.js').then(reg=>reg.update())}
+    render();if('serviceWorker'in navigator){let refreshing=false;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(refreshing)return;refreshing=true;location.reload()});navigator.serviceWorker.register('OneSignalSDKWorker.js',{scope:'/rundash/'}).then(reg=>reg.update())}
   </script>
 </body>
 </html>
