@@ -22,6 +22,9 @@
         serviceWorkerPath:'OneSignalSDKWorker.js',
         serviceWorkerParam:{scope:'/rundash/'}
       });
+      if(OneSignal.Notifications.permission&&!OneSignal.User.PushSubscription.optedIn){
+        try{await OneSignal.User.PushSubscription.optIn()}catch{}
+      }
     });
   </script>
   <style>
@@ -298,7 +301,10 @@
         if(window.OneSignalDeferred){
           OneSignalDeferred.push(async OneSignal=>{
             await OneSignal.Notifications.requestPermission();
-            if(OneSignal.Notifications.permission){localStorage.removeItem('running30-coach-notice');renderCoach();toast('푸시 알림을 허용했어요')}else toast('알림이 허용되지 않았어요');
+            if(OneSignal.Notifications.permission){
+              await OneSignal.User.PushSubscription.optIn();
+              localStorage.removeItem('running30-coach-notice');renderCoach();toast('푸시 알림 구독이 완료됐어요');
+            }else toast('알림이 허용되지 않았어요');
           });
         }else{
           const p=await Notification.requestPermission();
