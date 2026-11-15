@@ -1,6 +1,10 @@
 name: Jun's Run daily push
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/daily-push.yml'
   schedule:
     # Korea time: 09:00, 15:00, 20:00 (UTC: 00:00, 06:00, 11:00)
     - cron: '0 0 * * *'
@@ -20,6 +24,7 @@ on:
 
 jobs:
   send:
+    if: github.event_name != 'push' || contains(github.event.head_commit.message, '[test-push]')
     runs-on: ubuntu-latest
     steps:
       - name: Choose coaching message
