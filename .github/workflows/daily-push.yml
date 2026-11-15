@@ -1,4 +1,4 @@
-# Delivery verification enabled
+# Delivery verification enabled · retry 2
 name: Jun's Run daily push
 
 on:
