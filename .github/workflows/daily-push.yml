@@ -1,4 +1,4 @@
-# Exact OneSignal user targeting enabled
+# Queue two days of notifications in OneSignal so GitHub cron delays do not affect delivery time.
 name: Jun's Run daily push
 
 on:
@@ -7,87 +7,71 @@ on:
     paths:
       - '.github/workflows/daily-push.yml'
   schedule:
-    # Korea time: 09:00, 15:00, 20:00 (UTC: 00:00, 06:00, 11:00)
-    - cron: '0 0 * * *'
-    - cron: '0 6 * * *'
-    - cron: '0 11 * * *'
+    # Runs around midnight KST. Exact timing is unimportant because sends are queued ahead.
+    - cron: '0 15 * * *'
   workflow_dispatch:
-    inputs:
-      period:
-        description: 'Message to test'
-        required: true
-        default: evening
-        type: choice
-        options:
-          - morning
-          - afternoon
-          - evening
 
 jobs:
-  send:
-    if: github.event_name != 'push' || contains(github.event.head_commit.message, '[test-push]')
+  queue:
+    if: github.event_name != 'push' || contains(github.event.head_commit.message, '[schedule-push]')
     runs-on: ubuntu-latest
     steps:
-      - name: Choose coaching message
-        id: message
-        shell: bash
-        run: |
-          PERIOD="${{ inputs.period }}"
-          if [ -z "$PERIOD" ]; then
-            case "${{ github.event.schedule }}" in
-              "0 0 * * *") PERIOD="morning" ;;
-              "0 6 * * *") PERIOD="afternoon" ;;
-              *) PERIOD="evening" ;;
-            esac
-          fi
-          case "$PERIOD" in
-            morning)
-              echo 'frequencies=["3","2"]' >> "$GITHUB_OUTPUT"
-              echo "title=Jun's Run · 아침 체크" >> "$GITHUB_OUTPUT"
-              echo "body=오늘 운동 계획을 확인해보세요. 10분부터 시작해도 충분해요." >> "$GITHUB_OUTPUT"
-              ;;
-            afternoon)
-              echo 'frequencies=["3"]' >> "$GITHUB_OUTPUT"
-              echo "title=Jun's Run · 오후 코치" >> "$GITHUB_OUTPUT"
-              echo "body=이번 주 진행률을 확인하고 오늘 움직일 시간을 정해보세요." >> "$GITHUB_OUTPUT"
-              ;;
-            *)
-              echo 'frequencies=["3","2","1"]' >> "$GITHUB_OUTPUT"
-              echo "title=Jun's Run · 저녁 기록" >> "$GITHUB_OUTPUT"
-              echo "body=오늘 운동을 기록하고 내 폰의 맞춤 코칭을 확인하세요." >> "$GITHUB_OUTPUT"
-              ;;
-          esac
-
-      - name: Send and verify OneSignal notification
+      - name: Queue the next two days in OneSignal
         env:
           ONESIGNAL_REST_API_KEY: ${{ secrets.ONESIGNAL_REST_API_KEY }}
-          TITLE: ${{ steps.message.outputs.title }}
-          BODY: ${{ steps.message.outputs.body }}
-          FREQUENCIES: ${{ steps.message.outputs.frequencies }}
         shell: bash
         run: |
+          set -euo pipefail
           test -n "$ONESIGNAL_REST_API_KEY"
-          FILTERS=$(echo "$FREQUENCIES" | jq 'reduce .[] as $value ([]; . + (if length>0 then [{operator:"OR"}] else [] end) + [{field:"tag",key:"push_frequency",relation:"=",value:$value}])')
-          jq -n \
-            --arg app_id "f74757cd-7eca-41ee-97b1-03779597db71" \
-            --arg title "$TITLE" \
-            --arg body "$BODY" \
-            --arg url "https://junhwajeong-jpg.github.io/rundash/" \
-            --argjson filters "$FILTERS" \
-            '{
-              app_id: $app_id,
-              filters: $filters,
-              target_channel: "push",
-              headings: {ko: $title, en: $title},
-              contents: {ko: $body, en: $body},
-              url: $url
-            }' > payload.json
-          RESPONSE=$(curl --fail-with-body --silent --show-error \
-            --request POST \
-            --url "https://api.onesignal.com/notifications" \
-            --header "Authorization: Key $ONESIGNAL_REST_API_KEY" \
-            --header "Content-Type: application/json" \
-            --data @payload.json)
-          echo "$RESPONSE"
-          ID=$(echo "$RESPONSE" | jq -r '.id // empty')
-          test -n "$ID"
+
+          APP_ID='f74757cd-7eca-41ee-97b1-03779597db71'
+          APP_URL='https://junhwajeong-jpg.github.io/rundash/'
+
+          queue_push() {
+            local target_date="$1" period="$2" utc_time="$3" title="$4" body="$5" filters="$6"
+            local send_after="${target_date}T${utc_time}:00Z"
+            local raw hex idem response id
+            raw="juns-run|${target_date}|${period}"
+            hex=$(printf '%s' "$raw" | sha256sum | cut -c1-32)
+            idem="${hex:0:8}-${hex:8:4}-4${hex:13:3}-a${hex:17:3}-${hex:20:12}"
+
+            jq -n \
+              --arg app_id "$APP_ID" \
+              --arg title "$title" \
+              --arg body "$body" \
+              --arg url "$APP_URL" \
+              --arg send_after "$send_after" \
+              --arg idempotency_key "$idem" \
+              --argjson filters "$filters" \
+              '{
+                app_id: $app_id,
+                filters: $filters,
+                target_channel: "push",
+                headings: {ko: $title, en: $title},
+                contents: {ko: $body, en: $body},
+                url: $url,
+                send_after: $send_after,
+                idempotency_key: $idempotency_key
+              }' > payload.json
+
+            response=$(curl --fail-with-body --silent --show-error \
+              --request POST \
+              --url 'https://api.onesignal.com/notifications' \
+              --header "Authorization: Key $ONESIGNAL_REST_API_KEY" \
+              --header 'Content-Type: application/json' \
+              --data @payload.json)
+            echo "$period $send_after: $response"
+            id=$(echo "$response" | jq -r '.id // empty')
+            test -n "$id"
+          }
+
+          MORNING_FILTERS='[{"field":"tag","key":"push_frequency","relation":"=","value":"3"},{"operator":"OR"},{"field":"tag","key":"push_frequency","relation":"=","value":"2"},{"operator":"OR"},{"field":"tag","key":"push_frequency","relation":"not_exists"}]'
+          AFTERNOON_FILTERS='[{"field":"tag","key":"push_frequency","relation":"=","value":"3"},{"operator":"OR"},{"field":"tag","key":"push_frequency","relation":"not_exists"}]'
+          EVENING_FILTERS='[{"field":"tag","key":"push_frequency","relation":"=","value":"3"},{"operator":"OR"},{"field":"tag","key":"push_frequency","relation":"=","value":"2"},{"operator":"OR"},{"field":"tag","key":"push_frequency","relation":"=","value":"1"},{"operator":"OR"},{"field":"tag","key":"push_frequency","relation":"not_exists"}]'
+
+          for offset in 1 2; do
+            target_date=$(TZ=Asia/Seoul date -d "+${offset} day" +%F)
+            queue_push "$target_date" morning '00:00' "Jun's Run · 아침 체크" '오늘 운동 계획을 확인해보세요. 10분부터 시작해도 충분해요.' "$MORNING_FILTERS"
+            queue_push "$target_date" afternoon '06:00' "Jun's Run · 오후 코치" '이번 주 진행률을 확인하고 오늘 움직일 시간을 정해보세요.' "$AFTERNOON_FILTERS"
+            queue_push "$target_date" evening '11:00' "Jun's Run · 저녁 기록" '오늘 운동을 기록하고 내 폰의 맞춤 코칭을 확인하세요.' "$EVENING_FILTERS"
+          done
