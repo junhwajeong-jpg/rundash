@@ -75,7 +75,7 @@ jobs:
 
           for offset in 0 1 2; do
             target_date=$(TZ=Asia/Seoul date -d "+${offset} day" +%F)
-            queue_push "$target_date" morning '00:00' "Jun's Run · 아침 체크" '오늘 운동 계획을 확인해보세요. 10분부터 시작해도 충분해요.' "$MORNING_FILTERS"
-            queue_push "$target_date" afternoon '06:00' "Jun's Run · 오후 코치" '이번 주 진행률을 확인하고 오늘 움직일 시간을 정해보세요.' "$AFTERNOON_FILTERS"
-            queue_push "$target_date" evening '11:00' "Jun's Run · 저녁 기록" '오늘 운동을 기록하고 내 폰의 맞춤 코칭을 확인하세요.' "$EVENING_FILTERS"
+            queue_push "$target_date" morning '00:00' "Jun's PT · 오늘의 미션" '유산소 30분 또는 푸시업 20개×3세트. 몸 상태에 맞춰 하나부터 시작하세요.' "$MORNING_FILTERS"
+            queue_push "$target_date" afternoon '06:00' "Jun's PT · 진행 체크" '오늘 미션은 진행 중인가요? 남은 운동을 확인하고 10분이라도 움직여보세요.' "$AFTERNOON_FILTERS"
+            queue_push "$target_date" evening '11:00' "Jun's PT · 기록 마감" '오늘의 러닝·계단·근력 세트를 기록하고 PT 코칭을 확인하세요.' "$EVENING_FILTERS"
           done
