@@ -31,6 +31,10 @@ jobs:
             local target_date="$1" period="$2" utc_time="$3" title="$4" body="$5" filters="$6"
             local send_after="${target_date}T${utc_time}:00Z"
             local raw hex idem response id
+            if [ "$(date -d "$send_after" +%s)" -le "$(( $(date +%s) + 120 ))" ]; then
+              echo "Skip past time: $period $send_after"
+              return
+            fi
             raw="juns-run|${target_date}|${period}"
             hex=$(printf '%s' "$raw" | sha256sum | cut -c1-32)
             idem="${hex:0:8}-${hex:8:4}-4${hex:13:3}-a${hex:17:3}-${hex:20:12}"
@@ -69,7 +73,7 @@ jobs:
           AFTERNOON_FILTERS='[{"field":"tag","key":"push_frequency","relation":"=","value":"3"},{"operator":"OR"},{"field":"tag","key":"push_frequency","relation":"not_exists"}]'
           EVENING_FILTERS='[{"field":"tag","key":"push_frequency","relation":"=","value":"3"},{"operator":"OR"},{"field":"tag","key":"push_frequency","relation":"=","value":"2"},{"operator":"OR"},{"field":"tag","key":"push_frequency","relation":"=","value":"1"},{"operator":"OR"},{"field":"tag","key":"push_frequency","relation":"not_exists"}]'
 
-          for offset in 1 2; do
+          for offset in 0 1 2; do
             target_date=$(TZ=Asia/Seoul date -d "+${offset} day" +%F)
             queue_push "$target_date" morning '00:00' "Jun's Run · 아침 체크" '오늘 운동 계획을 확인해보세요. 10분부터 시작해도 충분해요.' "$MORNING_FILTERS"
             queue_push "$target_date" afternoon '06:00' "Jun's Run · 오후 코치" '이번 주 진행률을 확인하고 오늘 움직일 시간을 정해보세요.' "$AFTERNOON_FILTERS"
