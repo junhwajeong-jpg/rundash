@@ -1,6 +1,6 @@
 importScripts('https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.sw.js');
 
-const CACHE='running30-v21';
+const CACHE='running30-v22';
 const ASSETS=['./','./index.html','./manifest.webmanifest','./juns-run-signature-v9-192.png','./juns-run-signature-v9-512.png','./juns-run-signature-v9-apple.png'];
 self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>Promise.allSettled(ASSETS.map(async asset=>{const r=await fetch(asset);if(r.ok)await c.put(asset,r)}))).then(()=>self.skipWaiting())));
 self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith('running30-')&&k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));

@@ -53,6 +53,8 @@
     .coach-card{border-color:#c8ddd4;background:linear-gradient(145deg,#fffdf7,#eef7f2)}.coach-head{display:flex;align-items:center;justify-content:space-between;gap:10px}.coach-badge{display:inline-flex;align-items:center;gap:5px;padding:6px 9px;border-radius:99px;background:var(--ink);color:white;font-size:11px;font-weight:900}.coach-main{margin-top:12px;padding:14px;border-radius:16px;background:white;border:1px solid var(--line)}.coach-main strong{display:block;font-size:18px;margin-bottom:4px}.coach-list{display:grid;gap:8px;margin-top:9px}.coach-tip{padding:10px 12px;border-radius:12px;background:#f0f4f1;font-size:13px;line-height:1.45}.coach-tip.warn{background:#fff0e6;color:#8b431f}.coach-tip.good{background:#eff6d7;color:#536b13}.coach-privacy{margin-top:10px;font-size:11px;color:var(--muted)}
     .mission{padding:12px 0;border-bottom:1px solid var(--line)}.mission:last-child{border-bottom:0}.mission-head{display:flex;justify-content:space-between;gap:10px;margin-bottom:7px}.mission-head b:last-child{color:var(--ink2)}.mission .progress{height:9px;margin:0}.set-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.set-chip{padding:12px 6px;border:1px solid var(--line);border-radius:12px;background:white;text-align:center;font-weight:900}.set-chip.done{background:var(--lime);border-color:#badb58}.strength-note{padding:10px 12px;border-radius:12px;background:#eff6d7;color:#536b13;font-size:12px;line-height:1.45;margin-top:10px}.pill.strength{background:#eee7ff}.bar.strength{background:#7b61c9}#metricSeg button[data-metric="strength"]{--metric:#7255b7;--metric-soft:#eee7ff;--metric-border:#c8b8ee}
     .top{padding:calc(18px + env(safe-area-inset-top)) 20px 15px}.top>div{position:relative}.header-logo{position:absolute;z-index:2;left:50%;top:-6px;transform:translateX(-50%);width:42px;height:42px;border-radius:11px;margin:0;box-shadow:0 5px 14px rgba(0,0,0,.2)}.brand{gap:56px;min-height:28px}.hero{margin-top:12px}.ring-wrap{min-width:92px}.ring{width:76px;height:76px;background:repeating-conic-gradient(transparent 0 48.4deg,var(--ink) 48.4deg 51.43deg),conic-gradient(var(--lime) var(--progress,0%),#41655c 0)}.ring:after{inset:7px}.ring b{font-size:15px}.day-marker{width:9px;height:9px;transform:translate(-50%,-50%) rotate(var(--day-angle)) translateY(-34px) rotate(calc(-1 * var(--day-angle)))}.today-label{font-size:10px;margin-top:4px}
+    .ai-card{border-color:#c9bee9;background:linear-gradient(145deg,#fffdf7,#f3efff)}.ai-status{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:99px;background:#eee7ff;color:#5d4798;font-size:11px;font-weight:900}.ai-plan{margin-top:12px;padding:14px;border-radius:16px;background:white;border:1px solid #ddd4f3}.ai-plan strong{display:block;font-size:18px;margin-bottom:6px}.health-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}.health-summary>div{padding:10px 6px;border-radius:12px;background:#f3f0f8;text-align:center}.health-summary b{display:block;font-size:17px}.health-summary small{font-size:10px;color:var(--muted)}
+    .modal-backdrop{position:fixed;inset:0;background:rgba(8,30,24,.58);display:none;align-items:center;justify-content:center;padding:22px;z-index:50}.modal-backdrop.show{display:flex}.modal{width:min(100%,430px);background:var(--paper);border-radius:24px;padding:22px;box-shadow:0 24px 70px rgba(0,0,0,.28)}.modal h3{font-size:23px;margin:8px 0}.modal .actions{margin-top:18px}.modal-note{padding:11px 12px;background:#f0f4f1;border-radius:12px;font-size:12px;line-height:1.5;color:var(--muted)}
     @media(max-width:390px){.grid2{grid-template-columns:1fr}.summary b{font-size:18px}.card{padding:16px}.hero h2{font-size:27px}}
     @media(min-width:700px){.nav{left:50%;width:700px;transform:translateX(-50%)}.top>div{max-width:680px;margin:auto}}
   </style>
@@ -77,7 +79,7 @@
         <div class="coach-head"><div><div class="eyebrow">LOCAL COACH</div><h3 style="margin-bottom:0">오늘의 코치</h3></div></div>
         <div class="coach-main"><strong id="coachTitle">기록을 기다리고 있어요</strong><div class="detail" id="coachBody">운동 기록에 맞춰 바로 피드백해드릴게요.</div></div>
         <div class="coach-list" id="coachList"></div>
-        <div class="coach-privacy">기록은 외부로 전송되지 않으며 이 기기에서만 판단합니다.</div>
+        <div class="coach-privacy">주간 요약은 정부장님이 동의한 경우에만 AI PT 분석에 사용합니다.</div>
       </article>
 
       <article class="card">
@@ -106,6 +108,11 @@
         <div class="progress"><i id="weekProgress"></i></div><div class="detail" id="weekAchievement">달성률 0%</div>
         <div class="summary"><div><b id="weekRun">0</b><small>러닝(분)</small></div><div><b id="weekStairs">0</b><small>계단(분)</small></div><div><b id="weekStrength">0</b><small>근력(세트)</small></div></div>
       </article>
+      <article class="card ai-card">
+        <div class="coach-head"><div><div class="eyebrow">AI PT AGENT</div><h3 style="margin-bottom:0">이번 주 운동처방</h3></div><span class="ai-status" id="aiStatus">기기 내 안전 처방</span></div>
+        <div class="ai-plan"><strong id="aiPlanTitle">첫 처방을 준비해보세요</strong><div class="detail" id="aiPlanBody">건강 기록과 운동실적을 바탕으로 다음 주 목표를 자동 조정합니다.</div></div>
+        <button class="btn alt" id="reviewNowBtn" style="width:100%;margin-top:12px">주간 실적 분석하기</button>
+      </article>
       <article class="card"><div class="eyebrow">HOME FITNESS</div><h3>주간 근력 미션</h3><div id="strengthMissions"></div><div class="strength-note">같은 부위는 하루 이상 쉬어주세요. 관절 통증이 있으면 즉시 중단하고 동작 강도를 낮추세요.</div></article>
       <article class="card"><div class="eyebrow">요일별 합계</div><div id="days"></div></article>
     </section>
@@ -118,10 +125,21 @@
         <div class="summary metric"><div><b id="periodTotal">0</b><small>기간 합계(분)</small></div><div><b id="weeklyAverage">0</b><small>주평균(분)</small></div><div><b id="bestWeek">0</b><small>최고 주간(분)</small></div></div>
         <div class="chart" id="trendChart"></div>
       </article>
+      <article class="card"><div class="eyebrow">건강 추세</div><h3>주간 건강 기록</h3><div id="healthHistory"></div></article>
       <article class="card"><div class="eyebrow">운동 일기</div><h3>날짜별 기록</h3><div id="records"></div></article>
     </section>
 
     <section class="view" id="settingsView">
+      <article class="card ai-card">
+        <div class="eyebrow">WEEKLY HEALTH CHECK</div><h3>건강 기록</h3>
+        <div class="detail">AI PT가 운동 강도를 조절할 때 참고합니다. 입력값은 주간 단위로 저장됩니다.</div>
+        <div class="grid2"><div class="field"><label for="healthWeight">몸무게(kg)</label><input id="healthWeight" inputmode="decimal" type="number" min="20" max="300" step="0.1" placeholder="예: 75.0"></div><div class="field"><label for="healthGlucose">공복혈당(mg/dL)</label><input id="healthGlucose" inputmode="numeric" type="number" min="30" max="600" placeholder="선택 입력"></div></div>
+        <div class="grid2"><div class="field"><label for="healthSystolic">최고혈압</label><input id="healthSystolic" inputmode="numeric" type="number" min="60" max="260" placeholder="예: 125"></div><div class="field"><label for="healthDiastolic">최저혈압</label><input id="healthDiastolic" inputmode="numeric" type="number" min="30" max="180" placeholder="예: 80"></div></div>
+        <div class="grid2"><div class="field"><label for="healthFatigue">피로도</label><select id="healthFatigue"><option value="1">1 · 매우 좋음</option><option value="2">2 · 좋음</option><option value="3" selected>3 · 보통</option><option value="4">4 · 피곤함</option><option value="5">5 · 매우 피곤함</option></select></div><div class="field"><label for="healthPain">통증 정도</label><select id="healthPain"><option value="0">0 · 없음</option><option value="1">1 · 아주 약함</option><option value="2">2 · 약함</option><option value="3">3 · 신경 쓰임</option><option value="4">4 · 운동 어려움</option><option value="5">5 · 심함</option></select></div></div>
+        <div class="field"><label for="healthSleep">평균 수면시간</label><input id="healthSleep" inputmode="decimal" type="number" min="0" max="24" step="0.5" placeholder="예: 6.5"></div>
+        <button class="btn" id="saveHealth" style="width:100%">이번 주 건강 기록 저장</button>
+        <div class="health-summary" id="healthSummary"></div>
+      </article>
       <article class="card">
         <div class="eyebrow">설정</div><h3>나의 운동 목표</h3>
         <div class="field"><label for="appTitle">앱 제목</label><input id="appTitle" maxlength="24"></div>
@@ -141,14 +159,18 @@
         <button class="btn alt" id="notificationBtn" style="width:100%">기기 알림 허용</button>
       </article>
       <article class="card"><div class="eyebrow">백업</div><h3>기록 내보내기</h3><p class="detail">운동 기록은 이 휴대폰에만 저장됩니다. 앱을 삭제하거나 브라우저 데이터를 지우기 전에 백업하세요.</p><div class="actions"><button class="btn alt" id="exportBtn">백업 파일</button><button class="btn ghost" id="importBtn">백업 불러오기</button></div><input id="importFile" type="file" accept="application/json" hidden></article>
-      <article class="card"><div class="eyebrow">앱 정보</div><p class="privacy">외부 계정, 광고, 분석 도구를 사용하지 않습니다. 모든 기록은 이 앱의 로컬 저장공간에만 보관됩니다. · ver 4.0</p><button class="btn ghost" id="updateBtn" style="width:100%;margin:8px 0 10px">최신 버전 확인</button><button class="btn danger" id="clearBtn" style="width:100%">모든 기록 삭제</button></article>
+      <article class="card"><div class="eyebrow">앱 정보</div><p class="privacy">상세 운동·건강 기록은 휴대폰에 보관됩니다. AI PT 연결 시 동의한 주간 요약만 전송합니다. · ver 5.0</p><button class="btn ghost" id="updateBtn" style="width:100%;margin:8px 0 10px">최신 버전 확인</button><button class="btn danger" id="clearBtn" style="width:100%">모든 기록 삭제</button></article>
     </section>
   </main>
 
   <nav class="nav"><button class="on" data-view="today"><span>＋</span>오늘</button><button data-view="week"><span>▦</span>주간</button><button data-view="records"><span>⌁</span>기록</button><button data-view="settings"><span>⚙</span>설정</button></nav>
   <div class="toast" id="toast"></div>
+  <div class="modal-backdrop" id="weeklyReviewModal" role="dialog" aria-modal="true" aria-labelledby="reviewTitle">
+    <div class="modal"><div class="eyebrow">WEEKLY AI PT REVIEW</div><h3 id="reviewTitle">이번 주 기록을 전송할까요?</h3><p class="detail" id="reviewDescription">운동실적과 건강 기록을 요약해 다음 주 운동처방을 만듭니다.</p><div class="modal-note">상세 기록이나 메모는 보내지 않고 주간 합계만 사용합니다. ‘아니요’를 누르면 아무것도 전송하지 않습니다.</div><div class="actions"><button class="btn ghost" id="reviewNo">아니요</button><button class="btn" id="reviewYes">예, 처방받기</button></div></div>
+  </div>
   <script>
     const KEY='running30-v1',TYPES=['run','stairs','strength'],ALL_TYPES=['run','stairs','bike','strength'],CARDIO_TYPES=['run','stairs'];
+    const AI_PT_ENDPOINT='';
     const TYPE_INFO={run:{name:'러닝',icon:'🏃',extra:'거리(km)',unit:'km'},stairs:{name:'계단',icon:'🪜',extra:'오른 층수',unit:'층'},bike:{name:'자전거(이전 기록)',icon:'🚲',extra:'거리(km)',unit:'km'},strength:{name:'근력',icon:'💪',extra:'',unit:''}};
     const EXERCISES={pushup:{name:'푸시업',icon:'💪',unit:'개'},lunge:{name:'리버스 런지',icon:'🦵',unit:'회'},plank:{name:'플랭크',icon:'⏱️',unit:'초'}};
     const DEFAULT_STRENGTH_GOALS={pushup:{perSet:20,setsPerDay:3,daysPerWeek:3},lunge:{perSet:20,setsPerDay:3,daysPerWeek:2},plank:{perSet:30,setsPerDay:3,daysPerWeek:3}};
@@ -164,7 +186,7 @@
     function normalize(source){
       const src=source&&typeof source==='object'?source:{};
       const goals={};Object.keys(EXERCISES).forEach(k=>{const g=src.strengthGoals?.[k]||DEFAULT_STRENGTH_GOALS[k];goals[k]={perSet:num(g.perSet)||DEFAULT_STRENGTH_GOALS[k].perSet,setsPerDay:num(g.setsPerDay)||DEFAULT_STRENGTH_GOALS[k].setsPerDay,daysPerWeek:num(g.daysPerWeek)||DEFAULT_STRENGTH_GOALS[k].daysPerWeek}});
-      const out={...src,appTitle:src.appTitle||'30분 러닝',weeklyGoal:num(src.weeklyGoal)||150,strengthGoals:goals,coachEnabled:src.coachEnabled!==false,coachFrequency:String(src.coachFrequency||'3'),records:{}};
+      const out={...src,appTitle:src.appTitle||'30분 러닝',weeklyGoal:num(src.weeklyGoal)||150,strengthGoals:goals,coachEnabled:src.coachEnabled!==false,coachFrequency:String(src.coachFrequency||'3'),healthRecords:src.healthRecords&&typeof src.healthRecords==='object'?src.healthRecords:{},prescriptions:src.prescriptions&&typeof src.prescriptions==='object'?src.prescriptions:{},lastReviewWeek:String(src.lastReviewWeek||''),records:{}};
       Object.entries(src.records||{}).forEach(([date,r])=>{
         if(!r||typeof r!=='object')return;
         if(Array.isArray(r.entries)){
@@ -195,6 +217,48 @@
       const values={run:sumRange(dates[0],end,'run'),stairs:sumRange(dates[0],end,'stairs')};
       return {start:dates[0],end,dates,values,strength:strengthProgress(dates[0],end),total:values.run+values.stairs};
     }
+    const round5=v=>Math.max(0,Math.round(v/5)*5);
+    const currentWeekKey=()=>iso(monday(new Date()));
+    function currentHealth(){return state.healthRecords[currentWeekKey()]||{};}
+    function weeklySummary(anchor=iso(new Date())){
+      const w=weekData(anchor),items=w.dates.flatMap(d=>entriesFor(d).map(e=>({...e,date:d}))),cardio=items.filter(e=>CARDIO_TYPES.includes(e.type)),strengthSetsTotal=Object.values(w.strength).reduce((s,x)=>s+x.sets,0);
+      return {weekStart:w.start,weekEnd:w.end,exercise:{cardioMinutes:w.total,runningMinutes:w.values.run,stairsMinutes:w.values.stairs,strengthSets:strengthSetsTotal,exerciseDays:new Set(items.map(e=>e.date)).size,averageEffort:cardio.length?Math.round(cardio.reduce((s,e)=>s+num(e.effort),0)/cardio.length*10)/10:0},health:state.healthRecords[w.start]||{},currentTargets:{cardioMinutes:state.weeklyGoal,strengthGoals:state.strengthGoals}};
+    }
+    function localPrescription(summary){
+      const h=summary.health||{},x=summary.exercise,current=Math.max(60,num(summary.currentTargets.cardioMinutes)||150),recovery=num(h.pain)>=4||num(h.fatigue)>=5,loaded=num(h.pain)>=3||num(h.fatigue)>=4||x.averageEffort>=4.5;
+      let goal=current,title='꾸준히 이어가는 균형 처방',reason='현재 목표를 유지하면서 무리 없이 운동 빈도를 지켜보세요.';
+      if(recovery){goal=Math.max(60,round5(Math.min(current*.7,x.cardioMinutes||90)));title='회복이 우선인 한 주';reason='통증이나 피로도가 높아 강도를 낮췄습니다. 불편감이 계속되면 운동을 쉬고 전문가와 상담하세요.';}
+      else if(x.cardioMinutes>=current&&num(h.fatigue)<=3){goal=Math.min(210,round5(current*1.05));title='아주 조금만 발전하는 한 주';reason='목표를 달성해 다음 주 유산소 목표를 약 5%만 높였습니다.';}
+      else if(x.cardioMinutes<current*.5){goal=Math.max(90,round5(Math.max(x.cardioMinutes+30,current*.75)));title='다시 리듬을 만드는 한 주';reason='빠진 운동을 몰아서 보충하지 않고 달성 가능한 수준으로 목표를 조정했습니다.';}
+      else if(loaded){goal=Math.max(90,round5(current*.9));title='강도를 낮추고 회복하는 한 주';reason='최근 체감강도와 피로를 반영해 유산소 목표를 10% 낮췄습니다.';}
+      const goals={};Object.entries(state.strengthGoals).forEach(([k,g])=>{goals[k]={...g,setsPerDay:recovery?Math.max(1,g.setsPerDay-1):g.setsPerDay,daysPerWeek:loaded?Math.max(1,g.daysPerWeek-1):g.daysPerWeek};});
+      return {source:'local-safety',title,body:`유산소 ${goal}분 · 러닝과 계단을 나눠 진행하세요. ${reason}`,weeklyGoal:goal,strengthGoals:goals,safetyNote:'혈압·혈당은 추세 확인용입니다. 수치가 평소와 크게 다르거나 흉통·어지럼·호흡곤란이 있으면 운동보다 진료가 우선입니다.'};
+    }
+    function validatePrescription(raw,fallback){
+      const p=raw&&typeof raw==='object'?raw:fallback,goals={};Object.keys(EXERCISES).forEach(k=>{const g=p.strengthGoals?.[k]||fallback.strengthGoals[k];goals[k]={perSet:Math.max(1,Math.min(999,num(g.perSet)||fallback.strengthGoals[k].perSet)),setsPerDay:Math.max(1,Math.min(10,num(g.setsPerDay)||fallback.strengthGoals[k].setsPerDay)),daysPerWeek:Math.max(1,Math.min(7,num(g.daysPerWeek)||fallback.strengthGoals[k].daysPerWeek))};});
+      return {...fallback,...p,weeklyGoal:Math.max(60,Math.min(300,round5(num(p.weeklyGoal)||fallback.weeklyGoal))),strengthGoals:goals};
+    }
+    async function getPrescription(summary){
+      const fallback=localPrescription(summary);if(!AI_PT_ENDPOINT)return fallback;
+      try{const response=await fetch(AI_PT_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({consent:true,summary})});if(!response.ok)throw new Error('AI response');return {...validatePrescription(await response.json(),fallback),source:'ai'};}catch{return {...fallback,body:fallback.body+' AI 연결이 불안정해 안전 처방으로 대신 적용했습니다.'};}
+    }
+    function applyDuePrescriptions(){
+      const now=currentWeekKey();Object.entries(state.prescriptions).sort(([a],[b])=>a.localeCompare(b)).forEach(([week,p])=>{if(week<=now&&!p.applied){state.weeklyGoal=p.weeklyGoal;state.strengthGoals=p.strengthGoals;p.applied=true;p.appliedAt=new Date().toISOString();}});
+    }
+    function latestPrescription(){const rows=Object.entries(state.prescriptions).sort(([a],[b])=>b.localeCompare(a));return rows[0]&&{week:rows[0][0],...rows[0][1]};}
+    function renderAIPlan(){
+      const p=latestPrescription();if(!p){$('#aiPlanTitle').textContent='첫 처방을 준비해보세요';$('#aiPlanBody').textContent='건강 기록과 운동실적을 바탕으로 다음 주 목표를 자동 조정합니다.';$('#aiStatus').textContent=AI_PT_ENDPOINT?'AI 연결 준비':'기기 내 안전 처방';return}
+      $('#aiPlanTitle').textContent=p.title;$('#aiPlanBody').textContent=`${p.body} · ${short(p.week)} 주간부터 ${p.applied?'적용 중':'자동 적용 예정'}`;$('#aiStatus').textContent=p.source==='ai'?'AI 전문 처방':'안전 처방';
+    }
+    function renderHealth(){
+      const h=currentHealth();$('#healthWeight').value=h.weight||'';$('#healthGlucose').value=h.glucose||'';$('#healthSystolic').value=h.systolic||'';$('#healthDiastolic').value=h.diastolic||'';$('#healthFatigue').value=String(h.fatigue||3);$('#healthPain').value=String(h.pain||0);$('#healthSleep').value=h.sleep||'';
+      const items=[h.weight?`<div><b>${h.weight}</b><small>체중 kg</small></div>`:'',h.systolic?`<div><b>${h.systolic}/${h.diastolic||'-'}</b><small>혈압</small></div>`:'',h.glucose?`<div><b>${h.glucose}</b><small>공복혈당</small></div>`:''].filter(Boolean);$('#healthSummary').innerHTML=items.join('');
+    }
+    function showWeeklyReview(){
+      const s=weeklySummary(),h=s.health||{};$('#reviewDescription').textContent=`${short(s.weekStart)}~${short(s.weekEnd)} · 유산소 ${s.exercise.cardioMinutes}분 · 근력 ${s.exercise.strengthSets}세트${h.weight?` · 체중 ${h.weight}kg`:''}`;$('#weeklyReviewModal').classList.add('show');
+    }
+    function hideWeeklyReview(){$('#weeklyReviewModal').classList.remove('show');}
+    function maybeShowWeeklyReview(){const d=new Date(),week=currentWeekKey();if(d.getDay()===0&&state.lastReviewWeek!==week&&state.reviewDismissedWeek!==week)setTimeout(showWeeklyReview,700);}
     function toast(s){const t=$('#toast');t.textContent=s;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1800)}
     function previousWeek(anchor){const start=monday(dateFrom(anchor));return weekData(iso(addDays(start,-7)))}
     function remainingPlan(total,goal,dayIndex){
@@ -298,6 +362,9 @@
       $('#records').innerHTML=rows.length?rows.map(d=>{const b=breakdown(d),total=dayValue(d),bike=dayValue(d,'bike'),details=[b.run?`🏃 러닝 ${b.run}분`:'',b.stairs?`🪜 계단 ${b.stairs}분`:'',b.strength?`💪 근력 ${b.strength}세트`:'',bike?`🚲 이전 자전거 ${bike}분`:''].filter(Boolean).join(' · '),notes=entriesFor(d).map(e=>e.note).filter(Boolean).map(esc).join(' / ');return `<div class="record" data-date="${d}"><div class="record-top"><strong>${fmt(d)}</strong><span class="pill">유산소 ${total}분</span></div><div class="detail">${details}${notes?'<br>'+notes:''}</div></div>`}).join(''):'<div class="empty">아직 저장된 운동 기록이 없습니다.</div>';
       $$('#records .record').forEach(x=>x.onclick=()=>{selectedDate=x.dataset.date;renderToday();switchView('today')});
     }
+    function renderHealthHistory(){
+      const rows=Object.entries(state.healthRecords).sort(([a],[b])=>b.localeCompare(a));$('#healthHistory').innerHTML=rows.length?rows.map(([week,h])=>{const bits=[h.weight?`체중 ${h.weight}kg`:'',h.systolic?`혈압 ${h.systolic}/${h.diastolic||'-'}`:'',h.glucose?`공복혈당 ${h.glucose}`:'',`피로 ${h.fatigue||3}/5`,`통증 ${h.pain||0}/5`,h.sleep?`수면 ${h.sleep}시간`:''].filter(Boolean).join(' · ');return `<div class="record"><div class="record-top"><strong>${short(week)} 주간</strong></div><div class="detail">${bits}</div></div>`}).join(''):'<div class="empty">건강 기록을 저장하면 주간 변화가 표시됩니다.</div>';
+    }
     function renderFrequency(){
       const f=String(state.coachFrequency||'3'),texts={3:'하루 3회 · 오전 9시, 오후 3시, 저녁 8시에 코칭 알림을 보냅니다.',2:'하루 2회 · 오전 9시와 저녁 8시에 코칭 알림을 보냅니다.',1:'하루 1회 · 저녁 8시에 코칭 알림을 보냅니다.',0:'푸시 코칭 알림을 보내지 않습니다.'};
       $('#frequencyHelp').textContent=texts[f]||texts[3];
@@ -308,7 +375,7 @@
       OneSignalDeferred.push(async OneSignal=>{try{await OneSignal.User.addTag('push_frequency',value)}catch{}});
     }
     function renderStrengthGoalSettings(){ $('#strengthGoalSettings').innerHTML=Object.entries(EXERCISES).map(([k,ex])=>{const g=state.strengthGoals[k];return `<div class="mission"><b>${ex.icon} ${ex.name}</b><div class="grid2"><div class="field"><label>세트당 ${ex.unit}</label><input id="${k}PerSet" type="number" min="1" max="999" value="${g.perSet}"></div><div class="field"><label>하루 세트</label><input id="${k}Sets" type="number" min="1" max="20" value="${g.setsPerDay}"></div></div><div class="field"><label>주간 운동일</label><input id="${k}Days" type="number" min="1" max="7" value="${g.daysPerWeek}"></div></div>`}).join('');}
-    function render(){renderHeader();renderToday();renderCoach();renderWeek();renderTrend();renderRecords();renderStrengthGoalSettings();$('#appTitle').value=state.appTitle;$('#weeklyGoal').value=state.weeklyGoal;$('#coachEnabled').value=state.coachEnabled?'on':'off';$('#coachFrequency').value=state.coachFrequency||'3';renderFrequency();save()}
+    function render(){applyDuePrescriptions();renderHeader();renderToday();renderCoach();renderWeek();renderTrend();renderRecords();renderHealthHistory();renderStrengthGoalSettings();renderAIPlan();renderHealth();$('#appTitle').value=state.appTitle;$('#weeklyGoal').value=state.weeklyGoal;$('#coachEnabled').value=state.coachEnabled?'on':'off';$('#coachFrequency').value=state.coachFrequency||'3';renderFrequency();save()}
     function switchView(name){activeView=name;$$('.nav button').forEach(x=>x.classList.toggle('on',x.dataset.view===name));$$('.view').forEach(x=>x.classList.remove('active'));$('#'+name+'View').classList.add('active');if(name==='week')renderWeek();if(name==='records'){renderTrend();renderRecords()}window.scrollTo({top:0,behavior:'smooth'})}
     $('#recordDate').onchange=e=>{selectedDate=e.target.value||iso(new Date());editingId=null;renderToday()};$('#minutes').addEventListener('input',updateDerived);$('#extra').addEventListener('input',updateDerived);
     $$('#typeSeg button').forEach(b=>b.onclick=()=>{selectedType=b.dataset.type;editingId=null;renderToday()});
@@ -326,6 +393,11 @@
     let touchStart=null;$('.wrap').addEventListener('touchstart',e=>{if(e.touches.length!==1||e.target.closest('input,textarea,select,button,.chart')){touchStart=null;return}touchStart={x:e.touches[0].clientX,y:e.touches[0].clientY}},{passive:true});$('.wrap').addEventListener('touchend',e=>{if(!touchStart)return;const dx=e.changedTouches[0].clientX-touchStart.x,dy=e.changedTouches[0].clientY-touchStart.y;touchStart=null;if(Math.abs(dx)<55||Math.abs(dx)<Math.abs(dy)*1.25)return;const views=['today','week','records','settings'],i=views.indexOf(activeView),next=dx<0?i+1:i-1;if(next>=0&&next<views.length)switchView(views[next])},{passive:true});
     $('#saveSettings').onclick=()=>{state.appTitle=$('#appTitle').value.trim()||'30분 러닝';state.weeklyGoal=Math.max(30,num($('#weeklyGoal').value)||150);state.coachEnabled=$('#coachEnabled').value!=='off';state.coachFrequency=$('#coachFrequency').value||'3';save();syncPushFrequency();render();toast('설정을 저장했어요')};
     $('#saveStrengthGoals').onclick=()=>{Object.keys(EXERCISES).forEach(k=>{state.strengthGoals[k]={perSet:Math.max(1,num($(`#${k}PerSet`).value)),setsPerDay:Math.max(1,num($(`#${k}Sets`).value)),daysPerWeek:Math.min(7,Math.max(1,num($(`#${k}Days`).value)))}});save();render();toast('근력 미션을 저장했어요')};
+    $('#saveHealth').onclick=()=>{const week=currentWeekKey();state.healthRecords[week]={weight:num($('#healthWeight').value)||'',systolic:num($('#healthSystolic').value)||'',diastolic:num($('#healthDiastolic').value)||'',glucose:num($('#healthGlucose').value)||'',fatigue:Math.max(1,Math.min(5,num($('#healthFatigue').value)||3)),pain:Math.min(5,num($('#healthPain').value)),sleep:num($('#healthSleep').value)||'',savedAt:new Date().toISOString()};save();renderHealth();toast('이번 주 건강 기록을 저장했어요')};
+    $('#reviewNowBtn').onclick=showWeeklyReview;
+    $('#reviewNo').onclick=()=>{state.reviewDismissedWeek=currentWeekKey();save();hideWeeklyReview();toast('이번 주에는 전송하지 않아요')};
+    $('#weeklyReviewModal').onclick=e=>{if(e.target===$('#weeklyReviewModal'))hideWeeklyReview()};
+    $('#reviewYes').onclick=async()=>{const btn=$('#reviewYes'),summary=weeklySummary();btn.disabled=true;btn.textContent='처방 분석 중…';try{const prescription=await getPrescription(summary),effectiveWeek=iso(addDays(dateFrom(summary.weekStart),7));state.prescriptions[effectiveWeek]={...prescription,generatedAt:new Date().toISOString(),summary:{weekStart:summary.weekStart,weekEnd:summary.weekEnd,exercise:summary.exercise,health:summary.health},applied:false};state.lastReviewWeek=summary.weekStart;state.reviewDismissedWeek='';save();hideWeeklyReview();render();toast(`${short(effectiveWeek)} 주간 처방을 만들었어요`);}finally{btn.disabled=false;btn.textContent='예, 처방받기';}};
     $('#coachEnabled').onchange=()=>{state.coachEnabled=$('#coachEnabled').value!=='off';save();syncPushFrequency();renderCoach()};$('#coachFrequency').onchange=()=>{state.coachFrequency=$('#coachFrequency').value||'3';save();syncPushFrequency();renderFrequency()};
     $('#notificationBtn').onclick=async()=>{
       if(!('Notification'in window)){toast('이 기기에서는 알림을 지원하지 않아요');return}
@@ -353,7 +425,7 @@
     $('#importBtn').onclick=()=>$('#importFile').click();$('#importFile').onchange=async e=>{try{const d=JSON.parse(await e.target.files[0].text());if(!d.records)throw 0;state=normalize(d);save();render();toast('백업을 불러왔어요')}catch{alert('올바른 백업 파일이 아닙니다.')}};
     $('#updateBtn').onclick=async()=>{try{const reg=await navigator.serviceWorker?.getRegistration();await reg?.update();toast('최신 버전을 확인했어요')}catch{toast('인터넷 연결을 확인해주세요')}};
     $('#clearBtn').onclick=()=>{if(confirm('모든 운동 기록과 설정을 삭제할까요?')){localStorage.removeItem(KEY);location.reload()}};
-    render();
+    render();maybeShowWeeklyReview();
   </script>
 </body>
 </html>
