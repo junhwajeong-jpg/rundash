@@ -166,7 +166,7 @@
   <nav class="nav"><button class="on" data-view="today"><span>＋</span>오늘</button><button data-view="week"><span>▦</span>주간</button><button data-view="records"><span>⌁</span>기록</button><button data-view="settings"><span>⚙</span>설정</button></nav>
   <div class="toast" id="toast"></div>
   <div class="modal-backdrop" id="weeklyReviewModal" role="dialog" aria-modal="true" aria-labelledby="reviewTitle">
-    <div class="modal"><div class="eyebrow">WEEKLY AI PT REVIEW</div><h3 id="reviewTitle">이번 주 기록을 전송할까요?</h3><p class="detail" id="reviewDescription">운동실적과 건강 기록을 요약해 다음 주 운동처방을 만듭니다.</p><div class="modal-note">상세 기록이나 메모는 보내지 않고 주간 합계만 사용합니다. ‘아니요’를 누르면 아무것도 전송하지 않습니다.</div><div class="actions"><button class="btn ghost" id="reviewNo">아니요</button><button class="btn" id="reviewYes">예, 처방받기</button></div></div>
+    <div class="modal"><div class="eyebrow">WEEKLY AI PT REVIEW</div><h3 id="reviewTitle">이번 주 기록을 분석할까요?</h3><p class="detail" id="reviewDescription">운동실적과 건강 기록을 요약해 다음 주 운동처방을 만듭니다.</p><div class="modal-note" id="reviewPrivacy">현재는 외부 전송 없이 이 기기에서 주간 합계만 분석합니다. ‘아니요’를 누르면 분석하지 않습니다.</div><div class="actions"><button class="btn ghost" id="reviewNo">아니요</button><button class="btn" id="reviewYes">예, 처방받기</button></div></div>
   </div>
   <script>
     const KEY='running30-v1',TYPES=['run','stairs','strength'],ALL_TYPES=['run','stairs','bike','strength'],CARDIO_TYPES=['run','stairs'];
@@ -255,7 +255,7 @@
       const items=[h.weight?`<div><b>${h.weight}</b><small>체중 kg</small></div>`:'',h.systolic?`<div><b>${h.systolic}/${h.diastolic||'-'}</b><small>혈압</small></div>`:'',h.glucose?`<div><b>${h.glucose}</b><small>공복혈당</small></div>`:''].filter(Boolean);$('#healthSummary').innerHTML=items.join('');
     }
     function showWeeklyReview(){
-      const s=weeklySummary(),h=s.health||{};$('#reviewDescription').textContent=`${short(s.weekStart)}~${short(s.weekEnd)} · 유산소 ${s.exercise.cardioMinutes}분 · 근력 ${s.exercise.strengthSets}세트${h.weight?` · 체중 ${h.weight}kg`:''}`;$('#weeklyReviewModal').classList.add('show');
+      const s=weeklySummary(),h=s.health||{};$('#reviewTitle').textContent=AI_PT_ENDPOINT?'이번 주 기록을 전송할까요?':'이번 주 기록을 분석할까요?';$('#reviewPrivacy').textContent=AI_PT_ENDPOINT?'상세 기록이나 메모는 보내지 않고 동의한 주간 합계만 전송합니다.':'현재는 외부 전송 없이 이 기기에서 주간 합계만 분석합니다.';$('#reviewDescription').textContent=`${short(s.weekStart)}~${short(s.weekEnd)} · 유산소 ${s.exercise.cardioMinutes}분 · 근력 ${s.exercise.strengthSets}세트${h.weight?` · 체중 ${h.weight}kg`:''}`;$('#weeklyReviewModal').classList.add('show');
     }
     function hideWeeklyReview(){$('#weeklyReviewModal').classList.remove('show');}
     function maybeShowWeeklyReview(){const d=new Date(),week=currentWeekKey();if(d.getDay()===0&&state.lastReviewWeek!==week&&state.reviewDismissedWeek!==week)setTimeout(showWeeklyReview,700);}
